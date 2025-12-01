@@ -3,11 +3,17 @@ import 'package:intl/intl.dart';
 
 var timeFormat = DateFormat("yyyy-MM-dd HH:mm:ss");
 
-intToUsefulTime(int seconds) {
-  var hour = seconds ~/ 3600;
+String intToUsefulTime(int seconds) {
+  var day = seconds ~/ (24 * 3600);
+  var hour = (seconds % (24 * 3600)) ~/ 3600;
   var minute = (seconds % 3600) ~/ 60;
   var second = seconds % 60;
-  return "${hour}h ${minute}m ${second}s";
+  
+  if (day > 0) {
+    return "${day}d ${hour}h ${minute}m ${second}s";
+  } else {
+    return "${hour}h ${minute}m ${second}s";
+  }
 }
 
 String formatBytes(int bytes) {

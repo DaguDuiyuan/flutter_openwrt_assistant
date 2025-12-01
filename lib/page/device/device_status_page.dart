@@ -347,48 +347,5 @@ class DeviceStatusPage extends HookConsumerWidget {
         ],
       ),
     );
-    // return Card(
-    //   elevation: 0,
-    //   child: Column(
-    //     crossAxisAlignment: CrossAxisAlignment.start,
-    //     children: [
-    //       Text("dsdsdsd"),
-    //       SizedBox(
-    //         width: double.infinity,
-    //         height: 200,
-    //         child: Chart(
-    //           data: chartData.first,
-    //           variables: {
-    //             "time": Variable(accessor: (NetworkChartResp map) => map.time),
-    //             "value": Variable(accessor: (NetworkChartResp map) => map.rate),
-    //           },
-    //           marks: [
-    //             AreaMark(
-    //               shape: ShapeEncode(value: BasicAreaShape(smooth: false)),
-    //               gradient: GradientEncode(
-    //                 value: LinearGradient(
-    //                   begin: Alignment.topCenter,
-    //                   end: Alignment.bottomCenter,
-    //                   colors: [
-    //                     const Color(0xffF44334).withValues(alpha: .17),
-    //                     const Color(0xffF44334).withValues(alpha: 0),
-    //                   ],
-    //                 ),
-    //               ),
-    //             ),
-    //             LineMark(
-    //               shape: ShapeEncode(value: BasicLineShape(smooth: false)),
-    //               size: SizeEncode(value: 2),
-    //               color: ColorEncode(value: const Color(0xffF44334)),
-    //             ),
-    //           ],
-    //           padding: (size) => EdgeInsets.zero,
-    //           selections: const {},
-    //           crosshair: CrosshairGuide(followPointer: [false, true]),
-    //         ),
-    //       )
-    //     ],
-    //   ),
-    // );
   }
 }

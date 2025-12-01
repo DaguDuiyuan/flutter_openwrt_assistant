@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 
 class JsonRpcResponse<T> {
   final T? result;
@@ -92,7 +93,9 @@ class JsonRpcClient {
         responseHeader: true,
         responseBody: true,
         logPrint: (obj) {
-          print(obj);
+          if (kDebugMode) {
+            print(obj);
+          }
         },
       ),
     );

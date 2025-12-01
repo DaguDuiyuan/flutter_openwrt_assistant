@@ -38,7 +38,9 @@ class WirelessInterfaceResp {
 
       if (interface.containsKey("iwinfo")) {
         var interfaceStatistics = interface['iwinfo'];
-        item.signal = interfaceStatistics['signal'];
+        if (interfaceStatistics.containsKey("signal")) {
+          item.signal = interfaceStatistics['signal'];
+        }
         item.bssid = interfaceStatistics['bssid'];
         item.mode = interfaceStatistics['mode'];
 

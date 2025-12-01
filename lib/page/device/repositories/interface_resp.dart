@@ -111,7 +111,7 @@ convertToInterfaceResp(
     // );
 
     interfacesList = interfaceDataList.whereType<Map<String, dynamic>>().map((
-      detailedInterfaceMap,
+      detailedInterfaceMap
     ) {
       final stats = detailedInterfaceMap['stats'];
       if (stats == null || (stats is Map && stats.isEmpty)) {

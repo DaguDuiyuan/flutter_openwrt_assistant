@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_openwrt_assistant/page/device/session_provider.dart';
 import 'package:flutter_openwrt_assistant/database/table/device_table.dart';
 import 'package:flutter_openwrt_assistant/page/device/repositories/device_status_resp.dart';
@@ -55,7 +56,9 @@ class NetChartStateNotifier
           .read(sessionProvider(device).notifier)
           .getNetworkData(_networkList))[currentIndex];
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
     }
   }
 
