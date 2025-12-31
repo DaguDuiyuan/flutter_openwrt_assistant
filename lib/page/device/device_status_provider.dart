@@ -49,6 +49,7 @@ class NetChartStateNotifier
 
   getNetworkChartData() async {
     if (_networkList.isEmpty) {
+      state = [];
       return;
     }
     try {
@@ -56,6 +57,7 @@ class NetChartStateNotifier
           .read(sessionProvider(device).notifier)
           .getNetworkData(_networkList))[currentIndex];
     } catch (e) {
+      state = [];
       if (kDebugMode) {
         print(e);
       }

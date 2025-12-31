@@ -46,9 +46,7 @@ class DeviceStatusPage extends HookConsumerWidget {
                   networkInfoView(stats),
                   diskInfoView(stats),
                   systemStatusView(stats),
-                  SizedBox(
-                    height: 16,
-                  )
+                  SizedBox(height: 16),
                 ],
               ),
             ),
@@ -265,7 +263,7 @@ class DeviceStatusPage extends HookConsumerWidget {
         return LineChartBarData(
           spots: [
             FlSpot(0, chartData.first.rate.toDouble()),
-            FlSpot(1, chartData.first.rate.toDouble())
+            FlSpot(1, chartData.first.rate.toDouble()),
           ],
           isCurved: false,
           gradient: LinearGradient(colors: gradientColors),
@@ -307,9 +305,17 @@ class DeviceStatusPage extends HookConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 // todo 切换接口
-                Icon(Icons.arrow_downward, size: 18, color: Colors.blue.shade700),
+                Icon(
+                  Icons.arrow_downward,
+                  size: 18,
+                  color: Colors.blue.shade700,
+                ),
                 SizedBox(width: 4),
-                Text(formatSpeed(chartData[1].last.rate.toDouble())),
+                Text(
+                  chartData[1].isEmpty
+                      ? "0 bps"
+                      : formatSpeed(chartData[1].last.rate.toDouble()),
+                ),
                 SizedBox(width: 32),
                 Icon(
                   Icons.arrow_upward,
@@ -317,7 +323,11 @@ class DeviceStatusPage extends HookConsumerWidget {
                   color: Colors.green.shade700,
                 ),
                 SizedBox(width: 4),
-                Text(formatSpeed(chartData[0].last.rate.toDouble())),
+                Text(
+                  chartData[0].isEmpty
+                      ? "0 bps"
+                      : formatSpeed(chartData[0].last.rate.toDouble()),
+                ),
               ],
             ),
           ),
