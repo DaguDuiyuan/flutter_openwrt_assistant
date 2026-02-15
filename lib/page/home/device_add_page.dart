@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flutter_openwrt_assistant/core/utils/snackbar.dart';
+import 'package:flutter_openwrt_assistant/core/utils/snack_bar.dart';
 import 'package:flutter_openwrt_assistant/core/utils/utils.dart';
+import 'package:flutter_openwrt_assistant/database/database.dart';
 import 'package:flutter_openwrt_assistant/database/table/device_table.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -10,6 +11,7 @@ import 'home_provider.dart';
 
 class DeviceAddPage extends HookConsumerWidget {
   final int? deviceId;
+
   const DeviceAddPage({super.key, this.deviceId});
 
   @override
@@ -23,9 +25,11 @@ class DeviceAddPage extends HookConsumerWidget {
     final titles = ['主机地址', '用户名（默认root）', '密码', '备注'];
 
     Device? device;
-    if(deviceId != null){
+    if (deviceId != null) {
       device = useMemoized(() {
-        return ref.read(deviceProvider).firstWhereOrNull((device) => device.id == deviceId);
+        return ref
+            .read(deviceProvider)
+            .firstWhereOrNull((device) => device.id == deviceId);
       }, [deviceId]);
 
       final isInitialized = useState(false);
@@ -61,7 +65,7 @@ class DeviceAddPage extends HookConsumerWidget {
     );
   }
 
-  _addDevice(
+  Future<void> _addDevice(
     WidgetRef ref,
     BuildContext context,
     Device? updateDevice,
@@ -82,14 +86,15 @@ class DeviceAddPage extends HookConsumerWidget {
       url = 'http://$url';
     }
 
-    var device = (updateDevice ?? Device())
+    var device = (updateDevice ?? Device(id: isarDB.devices.autoIncrement()))
       ..url = url
       ..user = controllers[1].text
       ..password = controllers[2].text
       ..remark = controllers[3].text;
 
     // 保存之前判断url是否重复
-    if (updateDevice == null && ref.read(deviceProvider).any((element) => element.url == url)) {
+    if (updateDevice == null &&
+        ref.read(deviceProvider).any((element) => element.url == url)) {
       showErrorSnackBar("已存在该设备");
       return;
     }

@@ -1,7 +1,7 @@
 import 'package:flutter_openwrt_assistant/core/network/http_client.dart';
 import 'package:flutter_openwrt_assistant/page/device/repositories/wireless_device_resp.dart';
 
-getDeviceStatusPostData(String session) {
+List<CallItem> getDeviceStatusPostData(String session) {
   return [
     CallItem(method: "call", id: 1, params: [session, "system", "board", {}]),
     CallItem(method: "call", id: 2, params: [session, "system", "info", {}]),
@@ -53,11 +53,11 @@ getDeviceStatusPostData(String session) {
   ];
 }
 
-getWirelessInterfacePostData(String session) {
+List<dynamic> getWirelessInterfacePostData(String session) {
   return [session, 'luci-rpc', 'getWirelessDevices', {}];
 }
 
-kickWirelessPostData(String session, WirelessDeviceResp client) {
+List<dynamic> kickWirelessPostData(String session, WirelessDeviceResp client) {
   return [
     session,
     'hostapd.${client.interface}',
@@ -66,7 +66,7 @@ kickWirelessPostData(String session, WirelessDeviceResp client) {
   ];
 }
 
-getWirelessListPostData(String session, List interfaceMap) {
+List<CallItem<dynamic>> getWirelessListPostData(String session, List interfaceMap) {
   var postData = <CallItem>[];
   for (var i = 0; i < interfaceMap.length; i++) {
     postData.add(
@@ -93,11 +93,11 @@ getWirelessListPostData(String session, List interfaceMap) {
   return postData;
 }
 
-getNetworkDevicePostData(String session) {
+List<dynamic> getNetworkDevicePostData(String session) {
   return [session, "luci-rpc", "getNetworkDevices", {}];
 }
 
-getInterfacePostData(String session) {
+List<CallItem<dynamic>> getInterfacePostData(String session) {
   var postData = <CallItem>[
     CallItem(
       method: "call",
@@ -113,7 +113,7 @@ getInterfacePostData(String session) {
   return postData;
 }
 
-getNetworkDataPostData(String session, List<Map<String, dynamic>> networkList) {
+List<CallItem<dynamic>> getNetworkDataPostData(String session, List<Map<String, dynamic>> networkList) {
   var postData = <CallItem>[];
   for (var i = 0; i < networkList.length; i++) {
     postData.add(
@@ -132,6 +132,6 @@ getNetworkDataPostData(String session, List<Map<String, dynamic>> networkList) {
   return postData;
 }
 
-rebootPostData(String session){
+List<dynamic> rebootPostData(String session){
   return [session, "system", "reboot", {}];
 }

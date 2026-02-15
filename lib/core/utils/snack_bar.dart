@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_openwrt_assistant/router.dart';
 
 
-showErrorSnackBar(String content) {
+void showErrorSnackBar(String content) {
   final context = navigatorKey.currentContext!;
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
@@ -16,7 +16,7 @@ showErrorSnackBar(String content) {
   );
 }
 
-showSnackBar(String content) {
+void showSnackBar(String content) {
   ScaffoldMessenger.of(navigatorKey.currentContext!).showSnackBar(
     SnackBar(content: Text(content), behavior: SnackBarBehavior.floating),
   );

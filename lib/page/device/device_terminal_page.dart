@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_openwrt_assistant/page/device/session_provider.dart';
-import 'package:flutter_openwrt_assistant/core/utils/snackbar.dart';
+import 'package:flutter_openwrt_assistant/core/utils/snack_bar.dart';
 import 'package:flutter_openwrt_assistant/core/utils/utils.dart';
 import 'package:flutter_openwrt_assistant/database/table/device_table.dart';
 import 'package:flutter_openwrt_assistant/page/device/repositories/wireless_device_resp.dart';
@@ -108,16 +108,16 @@ class DeviceTerminalPage extends HookConsumerWidget {
                     separatorBuilder: (context, index) => SizedBox(height: 8),
                   ),
                 ),
-          error: (_, __) => _emptyListView("无线终端"),
+          error: (_, _) => _emptyListView("无线终端"),
           loading: () => Center(child: CircularProgressIndicator()),
         );
   }
 
-  _emptyListView(String tabText) {
+  Center _emptyListView(String tabText) {
     return Center(child: Text('暂无$tabText'));
   }
 
-  _showDisconnectDialog(
+  void _showDisconnectDialog(
     BuildContext context,
     WirelessDeviceResp wirelessDevice,
     WidgetRef ref,

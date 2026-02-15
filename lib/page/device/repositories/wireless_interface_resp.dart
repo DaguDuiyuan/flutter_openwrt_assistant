@@ -63,7 +63,7 @@ class WirelessInterfaceResp {
   }
 }
 
-convertWirelessInterfaceResp(JsonRpcResponse res) {
+List<WirelessInterfaceResp> convertWirelessInterfaceResp(JsonRpcResponse res) {
   var list = <WirelessInterfaceResp>[];
   final map = res.result?.last as Map;
   for (var e in map.keys) {

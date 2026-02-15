@@ -53,7 +53,7 @@ class DeviceStatusPage extends HookConsumerWidget {
     );
   }
 
-  systemStatusView(DeviceStatusResp stats) {
+  Card systemStatusView(DeviceStatusResp stats) {
     var titles = ["主机名", "型号", "架构", "目标平台", "内核版本", "温度", "本地时间", "运行时间"];
 
     var values = [
@@ -90,7 +90,7 @@ class DeviceStatusPage extends HookConsumerWidget {
     );
   }
 
-  systemCpuInfoView(DeviceStatusResp stats) {
+  GridView systemCpuInfoView(DeviceStatusResp stats) {
     var titles = ["CPU占用", "内存占用", "内存缓存", "连接数"];
     var icons = [
       Icons.memory_outlined,
@@ -143,7 +143,7 @@ class DeviceStatusPage extends HookConsumerWidget {
     );
   }
 
-  networkInfoView(DeviceStatusResp stats) {
+  Card networkInfoView(DeviceStatusResp stats) {
     var titles = ["WAN口IP", "LAN口IP", "网关", "DNS"];
     var values = [
       stats.wanIp,
@@ -183,7 +183,7 @@ class DeviceStatusPage extends HookConsumerWidget {
     );
   }
 
-  diskInfoView(DeviceStatusResp stats) {
+  SingleChildRenderObjectWidget diskInfoView(DeviceStatusResp stats) {
     if (stats.disks.isEmpty) {
       return SizedBox();
     }
@@ -229,7 +229,7 @@ class DeviceStatusPage extends HookConsumerWidget {
                     ),
                   ],
                 ),
-                separatorBuilder: (_, __) => SizedBox(height: 8),
+                separatorBuilder: (_, _) => SizedBox(height: 8),
               ),
             ],
           ),
@@ -238,7 +238,7 @@ class DeviceStatusPage extends HookConsumerWidget {
     );
   }
 
-  networkChartView(WidgetRef ref, List<List<NetworkChartResp>> chartData) {
+  Widget networkChartView(WidgetRef ref, List<List<NetworkChartResp>> chartData) {
     if (chartData.isEmpty || chartData.length < 2) {
       return Opacity(opacity: 0);
     }

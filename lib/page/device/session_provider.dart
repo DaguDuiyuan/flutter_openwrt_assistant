@@ -76,16 +76,16 @@ class SessionNotifier extends StateNotifier<SessionState> {
     }
   }
 
-  getDeviceStatus() async {
-    if (!state.isConnected || state.token == null) return;
+  Future<DeviceStatusResp?> getDeviceStatus() async {
+    if (!state.isConnected || state.token == null) return null;
     final res = await client.batchCall<dynamic>(
       getDeviceStatusPostData(state.token!),
     );
     return DeviceStatusResp.fromJson(res);
   }
 
-  getWirelessList() async {
-    if (!state.isConnected || state.token == null) return;
+  Future<List<WirelessDeviceResp>> getWirelessList() async {
+    if (!state.isConnected || state.token == null) return [];
 
     // 获取无线接口
     final res = await client.call<List<dynamic>>(
@@ -135,7 +135,7 @@ class SessionNotifier extends StateNotifier<SessionState> {
     return res.success;
   }
 
-  getNetworkList() async {
+  Future<List<Map<String, dynamic>>> getNetworkList() async {
     if (!state.isConnected || state.token == null) return [];
     final res = await client.call(
       "call",
@@ -164,7 +164,9 @@ class SessionNotifier extends StateNotifier<SessionState> {
     return [];
   }
 
-  getNetworkData(List<Map<String, dynamic>> networkList) async {
+  Future<List<List<List<NetworkChartResp>>>> getNetworkData(
+    List<Map<String, dynamic>> networkList,
+  ) async {
     if (!state.isConnected || state.token == null) return [];
     final res = await client.batchCall<dynamic>(
       getNetworkDataPostData(state.token!, networkList),
@@ -186,7 +188,7 @@ class SessionNotifier extends StateNotifier<SessionState> {
     return networkData;
   }
 
-  getInterfaceList() async {
+  Future<List<InterfaceResp>> getInterfaceList() async {
     if (!state.isConnected || state.token == null) return [];
     final res = await client.batchCall<dynamic>(
       getInterfacePostData(state.token!),
@@ -195,13 +197,11 @@ class SessionNotifier extends StateNotifier<SessionState> {
     if (!res.allSuccess) return <InterfaceResp>[];
     if (res.responses.isEmpty) return <InterfaceResp>[];
     final interfaceRes = res.responses.first.result?.last ?? {};
-    // fixme 流量数据
-    // final deviceRes = res.responses.last.result?.last ?? {};
 
     return convertToInterfaceResp(interfaceRes);
   }
 
-  getWirelessInterfaceList() async {
+  Future<List<WirelessInterfaceResp>> getWirelessInterfaceList() async {
     if (!state.isConnected || state.token == null) return [];
     // 获取无线接口
     final res = await client.call<List<dynamic>>(

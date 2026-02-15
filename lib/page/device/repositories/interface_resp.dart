@@ -98,34 +98,14 @@ class InterfaceResp {
   }
 }
 
-convertToInterfaceResp(
-  Map<String, dynamic> interfaceRes,
-  // Map<String, dynamic> deviceRes,
-) {
+List<InterfaceResp> convertToInterfaceResp(Map<String, dynamic> interfaceRes) {
   var interfacesList = <InterfaceResp>[];
   if (interfaceRes.containsKey('interface') &&
       interfaceRes['interface'] is List) {
     final List<dynamic> interfaceDataList = interfaceRes['interface'];
-    // final Map<String, dynamic> networkStatsMap = Map<String, dynamic>.from(
-    //   deviceRes,
-    // );
-
     interfacesList = interfaceDataList.whereType<Map<String, dynamic>>().map((
-      detailedInterfaceMap
+      detailedInterfaceMap,
     ) {
-      final stats = detailedInterfaceMap['stats'];
-      if (stats == null || (stats is Map && stats.isEmpty)) {
-        final String? deviceName =
-            detailedInterfaceMap['l3_device'] ?? detailedInterfaceMap['device'];
-        // if (deviceName != null) {
-        //   try {
-        //     final statsContainer = networkStatsMap[deviceName];
-        //     if (statsContainer is Map && statsContainer['stats'] is Map) {
-        //       detailedInterfaceMap['stats'] = statsContainer['stats'];
-        //     }
-        //   } catch (_) {}
-        // }
-      }
       return InterfaceResp.fromJson(detailedInterfaceMap);
     }).toList();
   }

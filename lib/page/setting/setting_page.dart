@@ -40,7 +40,7 @@ class SettingPage extends HookConsumerWidget {
     );
   }
 
-  showDayNightPicker(BuildContext context, WidgetRef ref) {
+  void showDayNightPicker(BuildContext context, WidgetRef ref) {
     var values = [ThemeMode.system, ThemeMode.dark, ThemeMode.light];
     showDialog(
       context: context,
@@ -73,7 +73,7 @@ class SettingPage extends HookConsumerWidget {
     );
   }
 
-  _showColorPicker(BuildContext context, WidgetRef ref) {
+  void _showColorPicker(BuildContext context, WidgetRef ref) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -82,7 +82,7 @@ class SettingPage extends HookConsumerWidget {
     );
   }
 
-  _updateThemeMode(WidgetRef ref, ThemeMode mode) {
+  void _updateThemeMode(WidgetRef ref, ThemeMode mode) {
     ref.read(themeModeProvider.notifier).state = mode;
     prefs.setInt("themeMode", switch (mode) {
       ThemeMode.system => 0,
@@ -91,7 +91,7 @@ class SettingPage extends HookConsumerWidget {
     });
   }
 
-  getIndexByThemeMode(ThemeMode mode) {
+  int getIndexByThemeMode(ThemeMode mode) {
     return switch (mode) {
       ThemeMode.system => 0,
       ThemeMode.dark => 1,
@@ -162,7 +162,7 @@ class ThemeDialog extends HookConsumerWidget {
     );
   }
 
-  buildColorRow(int startIndex, WidgetRef ref) {
+  List<Widget> buildColorRow(int startIndex, WidgetRef ref) {
     List<Widget> rowItems = [];
 
     for (int i = 0; i < 5; i++) {
@@ -207,7 +207,7 @@ class ThemeDialog extends HookConsumerWidget {
     return rowItems;
   }
 
-  _updateColorSeed(WidgetRef ref, Color color) {
+  void _updateColorSeed(WidgetRef ref, Color color) {
     ref.read(colorSeedProvider.notifier).state = color;
     prefs.setInt("colorSeed", color.toARGB32());
   }

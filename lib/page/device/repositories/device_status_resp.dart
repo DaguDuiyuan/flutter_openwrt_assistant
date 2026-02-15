@@ -245,7 +245,7 @@ class DeviceStatusResp {
     return resp;
   }
 
-  toJson() {
+  Map<String, Object> toJson() {
     return {
       'cpu_load': cpuLoad,
       'cpu_usage': cpuUsage,
@@ -287,7 +287,7 @@ class DiskStatusResp {
     required this.mount,
   });
 
-  toJson() {
+  Map<String, Object> toJson() {
     return {
       'total': total,
       'used': used,

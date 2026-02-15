@@ -32,7 +32,7 @@ class WirelessDeviceResp {
   }
 }
 
-batchGetWirelessDeviceResp(BatchResponse json, List interfaces) {
+List<WirelessDeviceResp> batchGetWirelessDeviceResp(BatchResponse json, List interfaces) {
   if (!json.allSuccess) return [];
   if (json.responses.isEmpty || json.responses.length <= 1) return [];
 

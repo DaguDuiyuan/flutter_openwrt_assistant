@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_openwrt_assistant/page/device/session_provider.dart';
-import 'package:flutter_openwrt_assistant/core/utils/snackbar.dart';
+import 'package:flutter_openwrt_assistant/core/utils/snack_bar.dart';
 import 'package:flutter_openwrt_assistant/database/table/device_table.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -61,7 +61,7 @@ class _HomePageState extends ConsumerState<HomePage> {
     );
   }
 
-  _showDeviceEditSheet(Device device) {
+  void _showDeviceEditSheet(Device device) {
     showModalBottomSheet(
       context: context,
       showDragHandle: true,

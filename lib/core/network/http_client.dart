@@ -43,7 +43,7 @@ class JsonRpcError {
   final String message;
   final dynamic data;
 
-  get isAccessDenied => code == -32002;
+  bool get isAccessDenied => code == -32002;
 
   JsonRpcError({required this.code, required this.message, this.data});
 

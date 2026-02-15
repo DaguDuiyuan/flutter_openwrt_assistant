@@ -19,11 +19,11 @@ class DeviceStateNotifier extends StateNotifier<DeviceStatusResp?> {
     getNetworkList();
   }
 
-  getStatus() async {
+  Future<void> getStatus() async {
     state = await ref.read(sessionProvider(device).notifier).getDeviceStatus();
   }
 
-  getNetworkList() async {
+  Future<void> getNetworkList() async {
     ref.read(sessionProvider(device).notifier).getNetworkList();
   }
 }
@@ -47,7 +47,7 @@ class NetChartStateNotifier
     getNetworkChartData();
   }
 
-  getNetworkChartData() async {
+  Future<void> getNetworkChartData() async {
     if (_networkList.isEmpty) {
       state = [];
       return;
@@ -64,12 +64,12 @@ class NetChartStateNotifier
     }
   }
 
-  setIndex(int index) async {
+  Future<void> setIndex(int index) async {
     currentIndex = index;
     state = [];
   }
 
-  currentInterface() {
+  dynamic currentInterface() {
     try{
       return _networkList[currentIndex]['name'];
     }catch(_){

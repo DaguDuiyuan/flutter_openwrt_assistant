@@ -35,7 +35,7 @@ class DeviceInterfacePage extends HookConsumerWidget {
     );
   }
 
-  interfaceView(BuildContext context, WidgetRef ref) {
+  RefreshIndicator interfaceView(BuildContext context, WidgetRef ref) {
     return RefreshIndicator(
       onRefresh: () => Future(() => ref.invalidate(interfaceProvider(device))),
       child: ref
@@ -150,7 +150,7 @@ class DeviceInterfacePage extends HookConsumerWidget {
                       );
                     },
                   ),
-            error: (e, __) => Center(
+            error: (e, _) => Center(
               child: GestureDetector(
                 onTap: () => ref.invalidate(interfaceProvider(device)),
                 child: Text("获取接口列表失败:(${e.toString()})"),
@@ -161,7 +161,7 @@ class DeviceInterfacePage extends HookConsumerWidget {
     );
   }
 
-  wirelessView(BuildContext context, WidgetRef ref) {
+  RefreshIndicator wirelessView(BuildContext context, WidgetRef ref) {
     return RefreshIndicator(
       onRefresh: () =>
           Future(() => ref.invalidate(wirelessInterfaceProvider(device))),
@@ -267,7 +267,7 @@ class DeviceInterfacePage extends HookConsumerWidget {
                       );
                     },
                   ),
-            error: (e, __) => Center(
+            error: (e, _) => Center(
               child: GestureDetector(
                 onTap: () => ref.invalidate(wirelessInterfaceProvider(device)),
                 child: Text("获取接口列表失败:(${e.toString()})"),

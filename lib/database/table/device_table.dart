@@ -1,17 +1,21 @@
-import 'package:isar_community/isar.dart';
+
+
+import 'package:isar_plus/isar_plus.dart';
 
 part 'device_table.g.dart';
 
 @collection
 class Device {
-  Id id = Isar.autoIncrement;
+  Device({required this.id});
+
+  final int id;
   String? url;
   String? user;
   String? password;
   String? remark;
 
   @ignore
-  get postUrl => '$url/cgi-bin/luci/admin/ubus';
+  String get postUrl => '$url/cgi-bin/luci/admin/ubus';
 
   @override
   bool operator ==(Object other) {

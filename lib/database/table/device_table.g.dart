@@ -3,673 +3,309 @@
 part of 'device_table.dart';
 
 // **************************************************************************
-// IsarCollectionGenerator
+// _IsarCollectionGenerator
 // **************************************************************************
 
 // coverage:ignore-file
-// ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters, always_specify_types
+// ignore_for_file: duplicate_ignore, invalid_use_of_protected_member, lines_longer_than_80_chars, constant_identifier_names, avoid_js_rounded_ints, no_leading_underscores_for_local_identifiers, require_trailing_commas, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_in_if_null_operators, library_private_types_in_public_api, prefer_const_constructors
+// ignore_for_file: type=lint
 
 extension GetDeviceCollection on Isar {
-  IsarCollection<Device> get devices => this.collection();
+  IsarCollection<int, Device> get devices => this.collection();
 }
 
-const DeviceSchema = CollectionSchema(
-  name: r'Device',
-  id: 3491430514663294648,
-  properties: {
-    r'hashCode': PropertySchema(id: 0, name: r'hashCode', type: IsarType.long),
-    r'password': PropertySchema(
-      id: 1,
-      name: r'password',
-      type: IsarType.string,
-    ),
-    r'remark': PropertySchema(id: 2, name: r'remark', type: IsarType.string),
-    r'url': PropertySchema(id: 3, name: r'url', type: IsarType.string),
-    r'user': PropertySchema(id: 4, name: r'user', type: IsarType.string),
-  },
-
-  estimateSize: _deviceEstimateSize,
-  serialize: _deviceSerialize,
-  deserialize: _deviceDeserialize,
-  deserializeProp: _deviceDeserializeProp,
-  idName: r'id',
-  indexes: {},
-  links: {},
-  embeddedSchemas: {},
-
-  getId: _deviceGetId,
-  getLinks: _deviceGetLinks,
-  attach: _deviceAttach,
-  version: '3.3.0-dev.3',
+final DeviceSchema = IsarGeneratedSchema(
+  schema: IsarSchema(
+    name: 'Device',
+    idName: 'id',
+    embedded: false,
+    properties: [
+      IsarPropertySchema(name: 'url', type: IsarType.string),
+      IsarPropertySchema(name: 'user', type: IsarType.string),
+      IsarPropertySchema(name: 'password', type: IsarType.string),
+      IsarPropertySchema(name: 'remark', type: IsarType.string),
+    ],
+    indexes: [],
+  ),
+  converter: IsarObjectConverter<int, Device>(
+    serialize: serializeDevice,
+    deserialize: deserializeDevice,
+    deserializeProperty: deserializeDeviceProp,
+  ),
+  getEmbeddedSchemas: () => [],
 );
 
-int _deviceEstimateSize(
-  Device object,
-  List<int> offsets,
-  Map<Type, List<int>> allOffsets,
-) {
-  var bytesCount = offsets.last;
-  {
-    final value = object.password;
-    if (value != null) {
-      bytesCount += 3 + value.length * 3;
-    }
-  }
-  {
-    final value = object.remark;
-    if (value != null) {
-      bytesCount += 3 + value.length * 3;
-    }
-  }
+@isarProtected
+int serializeDevice(IsarWriter writer, Device object) {
   {
     final value = object.url;
-    if (value != null) {
-      bytesCount += 3 + value.length * 3;
+    if (value == null) {
+      IsarCore.writeNull(writer, 1);
+    } else {
+      IsarCore.writeString(writer, 1, value);
     }
   }
   {
     final value = object.user;
-    if (value != null) {
-      bytesCount += 3 + value.length * 3;
+    if (value == null) {
+      IsarCore.writeNull(writer, 2);
+    } else {
+      IsarCore.writeString(writer, 2, value);
     }
   }
-  return bytesCount;
-}
-
-void _deviceSerialize(
-  Device object,
-  IsarWriter writer,
-  List<int> offsets,
-  Map<Type, List<int>> allOffsets,
-) {
-  writer.writeLong(offsets[0], object.hashCode);
-  writer.writeString(offsets[1], object.password);
-  writer.writeString(offsets[2], object.remark);
-  writer.writeString(offsets[3], object.url);
-  writer.writeString(offsets[4], object.user);
-}
-
-Device _deviceDeserialize(
-  Id id,
-  IsarReader reader,
-  List<int> offsets,
-  Map<Type, List<int>> allOffsets,
-) {
-  final object = Device();
-  object.id = id;
-  object.password = reader.readStringOrNull(offsets[1]);
-  object.remark = reader.readStringOrNull(offsets[2]);
-  object.url = reader.readStringOrNull(offsets[3]);
-  object.user = reader.readStringOrNull(offsets[4]);
-  return object;
-}
-
-P _deviceDeserializeProp<P>(
-  IsarReader reader,
-  int propertyId,
-  int offset,
-  Map<Type, List<int>> allOffsets,
-) {
-  switch (propertyId) {
-    case 0:
-      return (reader.readLong(offset)) as P;
-    case 1:
-      return (reader.readStringOrNull(offset)) as P;
-    case 2:
-      return (reader.readStringOrNull(offset)) as P;
-    case 3:
-      return (reader.readStringOrNull(offset)) as P;
-    case 4:
-      return (reader.readStringOrNull(offset)) as P;
-    default:
-      throw IsarError('Unknown property with id $propertyId');
+  {
+    final value = object.password;
+    if (value == null) {
+      IsarCore.writeNull(writer, 3);
+    } else {
+      IsarCore.writeString(writer, 3, value);
+    }
   }
-}
-
-Id _deviceGetId(Device object) {
+  {
+    final value = object.remark;
+    if (value == null) {
+      IsarCore.writeNull(writer, 4);
+    } else {
+      IsarCore.writeString(writer, 4, value);
+    }
+  }
   return object.id;
 }
 
-List<IsarLinkBase<dynamic>> _deviceGetLinks(Device object) {
-  return [];
+@isarProtected
+Device deserializeDevice(IsarReader reader) {
+  final int _id;
+  _id = IsarCore.readId(reader);
+  final object = Device(id: _id);
+  object.url = IsarCore.readString(reader, 1);
+  object.user = IsarCore.readString(reader, 2);
+  object.password = IsarCore.readString(reader, 3);
+  object.remark = IsarCore.readString(reader, 4);
+  return object;
 }
 
-void _deviceAttach(IsarCollection<dynamic> col, Id id, Device object) {
-  object.id = id;
-}
-
-extension DeviceQueryWhereSort on QueryBuilder<Device, Device, QWhere> {
-  QueryBuilder<Device, Device, QAfterWhere> anyId() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(const IdWhereClause.any());
-    });
+@isarProtected
+dynamic deserializeDeviceProp(IsarReader reader, int property) {
+  switch (property) {
+    case 0:
+      return IsarCore.readId(reader);
+    case 1:
+      return IsarCore.readString(reader, 1);
+    case 2:
+      return IsarCore.readString(reader, 2);
+    case 3:
+      return IsarCore.readString(reader, 3);
+    case 4:
+      return IsarCore.readString(reader, 4);
+    default:
+      throw ArgumentError('Unknown property: $property');
   }
 }
 
-extension DeviceQueryWhere on QueryBuilder<Device, Device, QWhereClause> {
-  QueryBuilder<Device, Device, QAfterWhereClause> idEqualTo(Id id) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(IdWhereClause.between(lower: id, upper: id));
-    });
-  }
+sealed class _DeviceUpdate {
+  bool call({
+    required int id,
+    String? url,
+    String? user,
+    String? password,
+    String? remark,
+  });
+}
 
-  QueryBuilder<Device, Device, QAfterWhereClause> idNotEqualTo(Id id) {
-    return QueryBuilder.apply(this, (query) {
-      if (query.whereSort == Sort.asc) {
-        return query
-            .addWhereClause(
-              IdWhereClause.lessThan(upper: id, includeUpper: false),
-            )
-            .addWhereClause(
-              IdWhereClause.greaterThan(lower: id, includeLower: false),
-            );
-      } else {
-        return query
-            .addWhereClause(
-              IdWhereClause.greaterThan(lower: id, includeLower: false),
-            )
-            .addWhereClause(
-              IdWhereClause.lessThan(upper: id, includeUpper: false),
-            );
-      }
-    });
-  }
+class _DeviceUpdateImpl implements _DeviceUpdate {
+  const _DeviceUpdateImpl(this.collection);
 
-  QueryBuilder<Device, Device, QAfterWhereClause> idGreaterThan(
-    Id id, {
-    bool include = false,
+  final IsarCollection<int, Device> collection;
+
+  @override
+  bool call({
+    required int id,
+    Object? url = ignore,
+    Object? user = ignore,
+    Object? password = ignore,
+    Object? remark = ignore,
   }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(
-        IdWhereClause.greaterThan(lower: id, includeLower: include),
-      );
-    });
+    return collection.updateProperties(
+          [id],
+          {
+            if (url != ignore) 1: url as String?,
+            if (user != ignore) 2: user as String?,
+            if (password != ignore) 3: password as String?,
+            if (remark != ignore) 4: remark as String?,
+          },
+        ) >
+        0;
   }
+}
 
-  QueryBuilder<Device, Device, QAfterWhereClause> idLessThan(
-    Id id, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(
-        IdWhereClause.lessThan(upper: id, includeUpper: include),
-      );
-    });
-  }
+sealed class _DeviceUpdateAll {
+  int call({
+    required List<int> id,
+    String? url,
+    String? user,
+    String? password,
+    String? remark,
+  });
+}
 
-  QueryBuilder<Device, Device, QAfterWhereClause> idBetween(
-    Id lowerId,
-    Id upperId, {
-    bool includeLower = true,
-    bool includeUpper = true,
+class _DeviceUpdateAllImpl implements _DeviceUpdateAll {
+  const _DeviceUpdateAllImpl(this.collection);
+
+  final IsarCollection<int, Device> collection;
+
+  @override
+  int call({
+    required List<int> id,
+    Object? url = ignore,
+    Object? user = ignore,
+    Object? password = ignore,
+    Object? remark = ignore,
   }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(
-        IdWhereClause.between(
-          lower: lowerId,
-          includeLower: includeLower,
-          upper: upperId,
-          includeUpper: includeUpper,
-        ),
-      );
+    return collection.updateProperties(id, {
+      if (url != ignore) 1: url as String?,
+      if (user != ignore) 2: user as String?,
+      if (password != ignore) 3: password as String?,
+      if (remark != ignore) 4: remark as String?,
     });
   }
+}
+
+extension DeviceUpdate on IsarCollection<int, Device> {
+  _DeviceUpdate get update => _DeviceUpdateImpl(this);
+
+  _DeviceUpdateAll get updateAll => _DeviceUpdateAllImpl(this);
+}
+
+sealed class _DeviceQueryUpdate {
+  int call({String? url, String? user, String? password, String? remark});
+}
+
+class _DeviceQueryUpdateImpl implements _DeviceQueryUpdate {
+  const _DeviceQueryUpdateImpl(this.query, {this.limit});
+
+  final IsarQuery<Device> query;
+  final int? limit;
+
+  @override
+  int call({
+    Object? url = ignore,
+    Object? user = ignore,
+    Object? password = ignore,
+    Object? remark = ignore,
+  }) {
+    return query.updateProperties(limit: limit, {
+      if (url != ignore) 1: url as String?,
+      if (user != ignore) 2: user as String?,
+      if (password != ignore) 3: password as String?,
+      if (remark != ignore) 4: remark as String?,
+    });
+  }
+}
+
+extension DeviceQueryUpdate on IsarQuery<Device> {
+  _DeviceQueryUpdate get updateFirst => _DeviceQueryUpdateImpl(this, limit: 1);
+
+  _DeviceQueryUpdate get updateAll => _DeviceQueryUpdateImpl(this);
+}
+
+class _DeviceQueryBuilderUpdateImpl implements _DeviceQueryUpdate {
+  const _DeviceQueryBuilderUpdateImpl(this.query, {this.limit});
+
+  final QueryBuilder<Device, Device, QOperations> query;
+  final int? limit;
+
+  @override
+  int call({
+    Object? url = ignore,
+    Object? user = ignore,
+    Object? password = ignore,
+    Object? remark = ignore,
+  }) {
+    final q = query.build();
+    try {
+      return q.updateProperties(limit: limit, {
+        if (url != ignore) 1: url as String?,
+        if (user != ignore) 2: user as String?,
+        if (password != ignore) 3: password as String?,
+        if (remark != ignore) 4: remark as String?,
+      });
+    } finally {
+      q.close();
+    }
+  }
+}
+
+extension DeviceQueryBuilderUpdate
+    on QueryBuilder<Device, Device, QOperations> {
+  _DeviceQueryUpdate get updateFirst =>
+      _DeviceQueryBuilderUpdateImpl(this, limit: 1);
+
+  _DeviceQueryUpdate get updateAll => _DeviceQueryBuilderUpdateImpl(this);
 }
 
 extension DeviceQueryFilter on QueryBuilder<Device, Device, QFilterCondition> {
-  QueryBuilder<Device, Device, QAfterFilterCondition> hashCodeEqualTo(
+  QueryBuilder<Device, Device, QAfterFilterCondition> idEqualTo(int value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        EqualCondition(property: 0, value: value),
+      );
+    });
+  }
+
+  QueryBuilder<Device, Device, QAfterFilterCondition> idGreaterThan(int value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        GreaterCondition(property: 0, value: value),
+      );
+    });
+  }
+
+  QueryBuilder<Device, Device, QAfterFilterCondition> idGreaterThanOrEqualTo(
     int value,
   ) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
-        FilterCondition.equalTo(property: r'hashCode', value: value),
+        GreaterOrEqualCondition(property: 0, value: value),
       );
     });
   }
 
-  QueryBuilder<Device, Device, QAfterFilterCondition> hashCodeGreaterThan(
-    int value, {
-    bool include = false,
-  }) {
+  QueryBuilder<Device, Device, QAfterFilterCondition> idLessThan(int value) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.greaterThan(
-          include: include,
-          property: r'hashCode',
-          value: value,
-        ),
-      );
+      return query.addFilterCondition(LessCondition(property: 0, value: value));
     });
   }
 
-  QueryBuilder<Device, Device, QAfterFilterCondition> hashCodeLessThan(
-    int value, {
-    bool include = false,
-  }) {
+  QueryBuilder<Device, Device, QAfterFilterCondition> idLessThanOrEqualTo(
+    int value,
+  ) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
-        FilterCondition.lessThan(
-          include: include,
-          property: r'hashCode',
-          value: value,
-        ),
-      );
-    });
-  }
-
-  QueryBuilder<Device, Device, QAfterFilterCondition> hashCodeBetween(
-    int lower,
-    int upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.between(
-          property: r'hashCode',
-          lower: lower,
-          includeLower: includeLower,
-          upper: upper,
-          includeUpper: includeUpper,
-        ),
-      );
-    });
-  }
-
-  QueryBuilder<Device, Device, QAfterFilterCondition> idEqualTo(Id value) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.equalTo(property: r'id', value: value),
-      );
-    });
-  }
-
-  QueryBuilder<Device, Device, QAfterFilterCondition> idGreaterThan(
-    Id value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.greaterThan(
-          include: include,
-          property: r'id',
-          value: value,
-        ),
-      );
-    });
-  }
-
-  QueryBuilder<Device, Device, QAfterFilterCondition> idLessThan(
-    Id value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.lessThan(
-          include: include,
-          property: r'id',
-          value: value,
-        ),
+        LessOrEqualCondition(property: 0, value: value),
       );
     });
   }
 
   QueryBuilder<Device, Device, QAfterFilterCondition> idBetween(
-    Id lower,
-    Id upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
+    int lower,
+    int upper,
+  ) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
-        FilterCondition.between(
-          property: r'id',
-          lower: lower,
-          includeLower: includeLower,
-          upper: upper,
-          includeUpper: includeUpper,
-        ),
-      );
-    });
-  }
-
-  QueryBuilder<Device, Device, QAfterFilterCondition> passwordIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        const FilterCondition.isNull(property: r'password'),
-      );
-    });
-  }
-
-  QueryBuilder<Device, Device, QAfterFilterCondition> passwordIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        const FilterCondition.isNotNull(property: r'password'),
-      );
-    });
-  }
-
-  QueryBuilder<Device, Device, QAfterFilterCondition> passwordEqualTo(
-    String? value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.equalTo(
-          property: r'password',
-          value: value,
-          caseSensitive: caseSensitive,
-        ),
-      );
-    });
-  }
-
-  QueryBuilder<Device, Device, QAfterFilterCondition> passwordGreaterThan(
-    String? value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.greaterThan(
-          include: include,
-          property: r'password',
-          value: value,
-          caseSensitive: caseSensitive,
-        ),
-      );
-    });
-  }
-
-  QueryBuilder<Device, Device, QAfterFilterCondition> passwordLessThan(
-    String? value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.lessThan(
-          include: include,
-          property: r'password',
-          value: value,
-          caseSensitive: caseSensitive,
-        ),
-      );
-    });
-  }
-
-  QueryBuilder<Device, Device, QAfterFilterCondition> passwordBetween(
-    String? lower,
-    String? upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.between(
-          property: r'password',
-          lower: lower,
-          includeLower: includeLower,
-          upper: upper,
-          includeUpper: includeUpper,
-          caseSensitive: caseSensitive,
-        ),
-      );
-    });
-  }
-
-  QueryBuilder<Device, Device, QAfterFilterCondition> passwordStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.startsWith(
-          property: r'password',
-          value: value,
-          caseSensitive: caseSensitive,
-        ),
-      );
-    });
-  }
-
-  QueryBuilder<Device, Device, QAfterFilterCondition> passwordEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.endsWith(
-          property: r'password',
-          value: value,
-          caseSensitive: caseSensitive,
-        ),
-      );
-    });
-  }
-
-  QueryBuilder<Device, Device, QAfterFilterCondition> passwordContains(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.contains(
-          property: r'password',
-          value: value,
-          caseSensitive: caseSensitive,
-        ),
-      );
-    });
-  }
-
-  QueryBuilder<Device, Device, QAfterFilterCondition> passwordMatches(
-    String pattern, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.matches(
-          property: r'password',
-          wildcard: pattern,
-          caseSensitive: caseSensitive,
-        ),
-      );
-    });
-  }
-
-  QueryBuilder<Device, Device, QAfterFilterCondition> passwordIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.equalTo(property: r'password', value: ''),
-      );
-    });
-  }
-
-  QueryBuilder<Device, Device, QAfterFilterCondition> passwordIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.greaterThan(property: r'password', value: ''),
-      );
-    });
-  }
-
-  QueryBuilder<Device, Device, QAfterFilterCondition> remarkIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        const FilterCondition.isNull(property: r'remark'),
-      );
-    });
-  }
-
-  QueryBuilder<Device, Device, QAfterFilterCondition> remarkIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        const FilterCondition.isNotNull(property: r'remark'),
-      );
-    });
-  }
-
-  QueryBuilder<Device, Device, QAfterFilterCondition> remarkEqualTo(
-    String? value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.equalTo(
-          property: r'remark',
-          value: value,
-          caseSensitive: caseSensitive,
-        ),
-      );
-    });
-  }
-
-  QueryBuilder<Device, Device, QAfterFilterCondition> remarkGreaterThan(
-    String? value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.greaterThan(
-          include: include,
-          property: r'remark',
-          value: value,
-          caseSensitive: caseSensitive,
-        ),
-      );
-    });
-  }
-
-  QueryBuilder<Device, Device, QAfterFilterCondition> remarkLessThan(
-    String? value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.lessThan(
-          include: include,
-          property: r'remark',
-          value: value,
-          caseSensitive: caseSensitive,
-        ),
-      );
-    });
-  }
-
-  QueryBuilder<Device, Device, QAfterFilterCondition> remarkBetween(
-    String? lower,
-    String? upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.between(
-          property: r'remark',
-          lower: lower,
-          includeLower: includeLower,
-          upper: upper,
-          includeUpper: includeUpper,
-          caseSensitive: caseSensitive,
-        ),
-      );
-    });
-  }
-
-  QueryBuilder<Device, Device, QAfterFilterCondition> remarkStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.startsWith(
-          property: r'remark',
-          value: value,
-          caseSensitive: caseSensitive,
-        ),
-      );
-    });
-  }
-
-  QueryBuilder<Device, Device, QAfterFilterCondition> remarkEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.endsWith(
-          property: r'remark',
-          value: value,
-          caseSensitive: caseSensitive,
-        ),
-      );
-    });
-  }
-
-  QueryBuilder<Device, Device, QAfterFilterCondition> remarkContains(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.contains(
-          property: r'remark',
-          value: value,
-          caseSensitive: caseSensitive,
-        ),
-      );
-    });
-  }
-
-  QueryBuilder<Device, Device, QAfterFilterCondition> remarkMatches(
-    String pattern, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.matches(
-          property: r'remark',
-          wildcard: pattern,
-          caseSensitive: caseSensitive,
-        ),
-      );
-    });
-  }
-
-  QueryBuilder<Device, Device, QAfterFilterCondition> remarkIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.equalTo(property: r'remark', value: ''),
-      );
-    });
-  }
-
-  QueryBuilder<Device, Device, QAfterFilterCondition> remarkIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        FilterCondition.greaterThan(property: r'remark', value: ''),
+        BetweenCondition(property: 0, lower: lower, upper: upper),
       );
     });
   }
 
   QueryBuilder<Device, Device, QAfterFilterCondition> urlIsNull() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        const FilterCondition.isNull(property: r'url'),
-      );
+      return query.addFilterCondition(const IsNullCondition(property: 1));
     });
   }
 
   QueryBuilder<Device, Device, QAfterFilterCondition> urlIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        const FilterCondition.isNotNull(property: r'url'),
-      );
+    return QueryBuilder.apply(not(), (query) {
+      return query.addFilterCondition(const IsNullCondition(property: 1));
     });
   }
 
@@ -679,8 +315,19 @@ extension DeviceQueryFilter on QueryBuilder<Device, Device, QFilterCondition> {
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
-        FilterCondition.equalTo(
-          property: r'url',
+        EqualCondition(property: 1, value: value, caseSensitive: caseSensitive),
+      );
+    });
+  }
+
+  QueryBuilder<Device, Device, QAfterFilterCondition> urlGreaterThan(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        GreaterCondition(
+          property: 1,
           value: value,
           caseSensitive: caseSensitive,
         ),
@@ -688,16 +335,14 @@ extension DeviceQueryFilter on QueryBuilder<Device, Device, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Device, Device, QAfterFilterCondition> urlGreaterThan(
+  QueryBuilder<Device, Device, QAfterFilterCondition> urlGreaterThanOrEqualTo(
     String? value, {
-    bool include = false,
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
-        FilterCondition.greaterThan(
-          include: include,
-          property: r'url',
+        GreaterOrEqualCondition(
+          property: 1,
           value: value,
           caseSensitive: caseSensitive,
         ),
@@ -707,14 +352,23 @@ extension DeviceQueryFilter on QueryBuilder<Device, Device, QFilterCondition> {
 
   QueryBuilder<Device, Device, QAfterFilterCondition> urlLessThan(
     String? value, {
-    bool include = false,
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
-        FilterCondition.lessThan(
-          include: include,
-          property: r'url',
+        LessCondition(property: 1, value: value, caseSensitive: caseSensitive),
+      );
+    });
+  }
+
+  QueryBuilder<Device, Device, QAfterFilterCondition> urlLessThanOrEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        LessOrEqualCondition(
+          property: 1,
           value: value,
           caseSensitive: caseSensitive,
         ),
@@ -725,18 +379,14 @@ extension DeviceQueryFilter on QueryBuilder<Device, Device, QFilterCondition> {
   QueryBuilder<Device, Device, QAfterFilterCondition> urlBetween(
     String? lower,
     String? upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
-        FilterCondition.between(
-          property: r'url',
+        BetweenCondition(
+          property: 1,
           lower: lower,
-          includeLower: includeLower,
           upper: upper,
-          includeUpper: includeUpper,
           caseSensitive: caseSensitive,
         ),
       );
@@ -749,8 +399,8 @@ extension DeviceQueryFilter on QueryBuilder<Device, Device, QFilterCondition> {
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
-        FilterCondition.startsWith(
-          property: r'url',
+        StartsWithCondition(
+          property: 1,
           value: value,
           caseSensitive: caseSensitive,
         ),
@@ -764,8 +414,8 @@ extension DeviceQueryFilter on QueryBuilder<Device, Device, QFilterCondition> {
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
-        FilterCondition.endsWith(
-          property: r'url',
+        EndsWithCondition(
+          property: 1,
           value: value,
           caseSensitive: caseSensitive,
         ),
@@ -779,8 +429,8 @@ extension DeviceQueryFilter on QueryBuilder<Device, Device, QFilterCondition> {
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
-        FilterCondition.contains(
-          property: r'url',
+        ContainsCondition(
+          property: 1,
           value: value,
           caseSensitive: caseSensitive,
         ),
@@ -794,8 +444,8 @@ extension DeviceQueryFilter on QueryBuilder<Device, Device, QFilterCondition> {
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
-        FilterCondition.matches(
-          property: r'url',
+        MatchesCondition(
+          property: 1,
           wildcard: pattern,
           caseSensitive: caseSensitive,
         ),
@@ -806,7 +456,7 @@ extension DeviceQueryFilter on QueryBuilder<Device, Device, QFilterCondition> {
   QueryBuilder<Device, Device, QAfterFilterCondition> urlIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
-        FilterCondition.equalTo(property: r'url', value: ''),
+        const EqualCondition(property: 1, value: ''),
       );
     });
   }
@@ -814,24 +464,20 @@ extension DeviceQueryFilter on QueryBuilder<Device, Device, QFilterCondition> {
   QueryBuilder<Device, Device, QAfterFilterCondition> urlIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
-        FilterCondition.greaterThan(property: r'url', value: ''),
+        const GreaterCondition(property: 1, value: ''),
       );
     });
   }
 
   QueryBuilder<Device, Device, QAfterFilterCondition> userIsNull() {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        const FilterCondition.isNull(property: r'user'),
-      );
+      return query.addFilterCondition(const IsNullCondition(property: 2));
     });
   }
 
   QueryBuilder<Device, Device, QAfterFilterCondition> userIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        const FilterCondition.isNotNull(property: r'user'),
-      );
+    return QueryBuilder.apply(not(), (query) {
+      return query.addFilterCondition(const IsNullCondition(property: 2));
     });
   }
 
@@ -841,8 +487,19 @@ extension DeviceQueryFilter on QueryBuilder<Device, Device, QFilterCondition> {
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
-        FilterCondition.equalTo(
-          property: r'user',
+        EqualCondition(property: 2, value: value, caseSensitive: caseSensitive),
+      );
+    });
+  }
+
+  QueryBuilder<Device, Device, QAfterFilterCondition> userGreaterThan(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        GreaterCondition(
+          property: 2,
           value: value,
           caseSensitive: caseSensitive,
         ),
@@ -850,16 +507,14 @@ extension DeviceQueryFilter on QueryBuilder<Device, Device, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Device, Device, QAfterFilterCondition> userGreaterThan(
+  QueryBuilder<Device, Device, QAfterFilterCondition> userGreaterThanOrEqualTo(
     String? value, {
-    bool include = false,
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
-        FilterCondition.greaterThan(
-          include: include,
-          property: r'user',
+        GreaterOrEqualCondition(
+          property: 2,
           value: value,
           caseSensitive: caseSensitive,
         ),
@@ -869,14 +524,23 @@ extension DeviceQueryFilter on QueryBuilder<Device, Device, QFilterCondition> {
 
   QueryBuilder<Device, Device, QAfterFilterCondition> userLessThan(
     String? value, {
-    bool include = false,
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
-        FilterCondition.lessThan(
-          include: include,
-          property: r'user',
+        LessCondition(property: 2, value: value, caseSensitive: caseSensitive),
+      );
+    });
+  }
+
+  QueryBuilder<Device, Device, QAfterFilterCondition> userLessThanOrEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        LessOrEqualCondition(
+          property: 2,
           value: value,
           caseSensitive: caseSensitive,
         ),
@@ -887,18 +551,14 @@ extension DeviceQueryFilter on QueryBuilder<Device, Device, QFilterCondition> {
   QueryBuilder<Device, Device, QAfterFilterCondition> userBetween(
     String? lower,
     String? upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
-        FilterCondition.between(
-          property: r'user',
+        BetweenCondition(
+          property: 2,
           lower: lower,
-          includeLower: includeLower,
           upper: upper,
-          includeUpper: includeUpper,
           caseSensitive: caseSensitive,
         ),
       );
@@ -911,8 +571,8 @@ extension DeviceQueryFilter on QueryBuilder<Device, Device, QFilterCondition> {
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
-        FilterCondition.startsWith(
-          property: r'user',
+        StartsWithCondition(
+          property: 2,
           value: value,
           caseSensitive: caseSensitive,
         ),
@@ -926,8 +586,8 @@ extension DeviceQueryFilter on QueryBuilder<Device, Device, QFilterCondition> {
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
-        FilterCondition.endsWith(
-          property: r'user',
+        EndsWithCondition(
+          property: 2,
           value: value,
           caseSensitive: caseSensitive,
         ),
@@ -941,8 +601,8 @@ extension DeviceQueryFilter on QueryBuilder<Device, Device, QFilterCondition> {
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
-        FilterCondition.contains(
-          property: r'user',
+        ContainsCondition(
+          property: 2,
           value: value,
           caseSensitive: caseSensitive,
         ),
@@ -956,8 +616,8 @@ extension DeviceQueryFilter on QueryBuilder<Device, Device, QFilterCondition> {
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
-        FilterCondition.matches(
-          property: r'user',
+        MatchesCondition(
+          property: 2,
           wildcard: pattern,
           caseSensitive: caseSensitive,
         ),
@@ -968,7 +628,7 @@ extension DeviceQueryFilter on QueryBuilder<Device, Device, QFilterCondition> {
   QueryBuilder<Device, Device, QAfterFilterCondition> userIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
-        FilterCondition.equalTo(property: r'user', value: ''),
+        const EqualCondition(property: 2, value: ''),
       );
     });
   }
@@ -976,7 +636,347 @@ extension DeviceQueryFilter on QueryBuilder<Device, Device, QFilterCondition> {
   QueryBuilder<Device, Device, QAfterFilterCondition> userIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
-        FilterCondition.greaterThan(property: r'user', value: ''),
+        const GreaterCondition(property: 2, value: ''),
+      );
+    });
+  }
+
+  QueryBuilder<Device, Device, QAfterFilterCondition> passwordIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const IsNullCondition(property: 3));
+    });
+  }
+
+  QueryBuilder<Device, Device, QAfterFilterCondition> passwordIsNotNull() {
+    return QueryBuilder.apply(not(), (query) {
+      return query.addFilterCondition(const IsNullCondition(property: 3));
+    });
+  }
+
+  QueryBuilder<Device, Device, QAfterFilterCondition> passwordEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        EqualCondition(property: 3, value: value, caseSensitive: caseSensitive),
+      );
+    });
+  }
+
+  QueryBuilder<Device, Device, QAfterFilterCondition> passwordGreaterThan(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        GreaterCondition(
+          property: 3,
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<Device, Device, QAfterFilterCondition>
+  passwordGreaterThanOrEqualTo(String? value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        GreaterOrEqualCondition(
+          property: 3,
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<Device, Device, QAfterFilterCondition> passwordLessThan(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        LessCondition(property: 3, value: value, caseSensitive: caseSensitive),
+      );
+    });
+  }
+
+  QueryBuilder<Device, Device, QAfterFilterCondition> passwordLessThanOrEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        LessOrEqualCondition(
+          property: 3,
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<Device, Device, QAfterFilterCondition> passwordBetween(
+    String? lower,
+    String? upper, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        BetweenCondition(
+          property: 3,
+          lower: lower,
+          upper: upper,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<Device, Device, QAfterFilterCondition> passwordStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        StartsWithCondition(
+          property: 3,
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<Device, Device, QAfterFilterCondition> passwordEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        EndsWithCondition(
+          property: 3,
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<Device, Device, QAfterFilterCondition> passwordContains(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        ContainsCondition(
+          property: 3,
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<Device, Device, QAfterFilterCondition> passwordMatches(
+    String pattern, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        MatchesCondition(
+          property: 3,
+          wildcard: pattern,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<Device, Device, QAfterFilterCondition> passwordIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        const EqualCondition(property: 3, value: ''),
+      );
+    });
+  }
+
+  QueryBuilder<Device, Device, QAfterFilterCondition> passwordIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        const GreaterCondition(property: 3, value: ''),
+      );
+    });
+  }
+
+  QueryBuilder<Device, Device, QAfterFilterCondition> remarkIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const IsNullCondition(property: 4));
+    });
+  }
+
+  QueryBuilder<Device, Device, QAfterFilterCondition> remarkIsNotNull() {
+    return QueryBuilder.apply(not(), (query) {
+      return query.addFilterCondition(const IsNullCondition(property: 4));
+    });
+  }
+
+  QueryBuilder<Device, Device, QAfterFilterCondition> remarkEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        EqualCondition(property: 4, value: value, caseSensitive: caseSensitive),
+      );
+    });
+  }
+
+  QueryBuilder<Device, Device, QAfterFilterCondition> remarkGreaterThan(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        GreaterCondition(
+          property: 4,
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<Device, Device, QAfterFilterCondition>
+  remarkGreaterThanOrEqualTo(String? value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        GreaterOrEqualCondition(
+          property: 4,
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<Device, Device, QAfterFilterCondition> remarkLessThan(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        LessCondition(property: 4, value: value, caseSensitive: caseSensitive),
+      );
+    });
+  }
+
+  QueryBuilder<Device, Device, QAfterFilterCondition> remarkLessThanOrEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        LessOrEqualCondition(
+          property: 4,
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<Device, Device, QAfterFilterCondition> remarkBetween(
+    String? lower,
+    String? upper, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        BetweenCondition(
+          property: 4,
+          lower: lower,
+          upper: upper,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<Device, Device, QAfterFilterCondition> remarkStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        StartsWithCondition(
+          property: 4,
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<Device, Device, QAfterFilterCondition> remarkEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        EndsWithCondition(
+          property: 4,
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<Device, Device, QAfterFilterCondition> remarkContains(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        ContainsCondition(
+          property: 4,
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<Device, Device, QAfterFilterCondition> remarkMatches(
+    String pattern, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        MatchesCondition(
+          property: 4,
+          wildcard: pattern,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<Device, Device, QAfterFilterCondition> remarkIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        const EqualCondition(property: 4, value: ''),
+      );
+    });
+  }
+
+  QueryBuilder<Device, Device, QAfterFilterCondition> remarkIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        const GreaterCondition(property: 4, value: ''),
       );
     });
   }
@@ -984,218 +984,289 @@ extension DeviceQueryFilter on QueryBuilder<Device, Device, QFilterCondition> {
 
 extension DeviceQueryObject on QueryBuilder<Device, Device, QFilterCondition> {}
 
-extension DeviceQueryLinks on QueryBuilder<Device, Device, QFilterCondition> {}
-
 extension DeviceQuerySortBy on QueryBuilder<Device, Device, QSortBy> {
-  QueryBuilder<Device, Device, QAfterSortBy> sortByHashCode() {
+  QueryBuilder<Device, Device, QAfterSortBy> sortById() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'hashCode', Sort.asc);
+      return query.addSortBy(0);
     });
   }
 
-  QueryBuilder<Device, Device, QAfterSortBy> sortByHashCodeDesc() {
+  QueryBuilder<Device, Device, QAfterSortBy> sortByIdDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'hashCode', Sort.desc);
+      return query.addSortBy(0, sort: Sort.desc);
     });
   }
 
-  QueryBuilder<Device, Device, QAfterSortBy> sortByPassword() {
+  QueryBuilder<Device, Device, QAfterSortBy> sortByUrl({
+    bool caseSensitive = true,
+  }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'password', Sort.asc);
+      return query.addSortBy(1, caseSensitive: caseSensitive);
     });
   }
 
-  QueryBuilder<Device, Device, QAfterSortBy> sortByPasswordDesc() {
+  QueryBuilder<Device, Device, QAfterSortBy> sortByUrlDesc({
+    bool caseSensitive = true,
+  }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'password', Sort.desc);
+      return query.addSortBy(1, sort: Sort.desc, caseSensitive: caseSensitive);
     });
   }
 
-  QueryBuilder<Device, Device, QAfterSortBy> sortByRemark() {
+  QueryBuilder<Device, Device, QAfterSortBy> sortByUser({
+    bool caseSensitive = true,
+  }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'remark', Sort.asc);
+      return query.addSortBy(2, caseSensitive: caseSensitive);
     });
   }
 
-  QueryBuilder<Device, Device, QAfterSortBy> sortByRemarkDesc() {
+  QueryBuilder<Device, Device, QAfterSortBy> sortByUserDesc({
+    bool caseSensitive = true,
+  }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'remark', Sort.desc);
+      return query.addSortBy(2, sort: Sort.desc, caseSensitive: caseSensitive);
     });
   }
 
-  QueryBuilder<Device, Device, QAfterSortBy> sortByUrl() {
+  QueryBuilder<Device, Device, QAfterSortBy> sortByPassword({
+    bool caseSensitive = true,
+  }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'url', Sort.asc);
+      return query.addSortBy(3, caseSensitive: caseSensitive);
     });
   }
 
-  QueryBuilder<Device, Device, QAfterSortBy> sortByUrlDesc() {
+  QueryBuilder<Device, Device, QAfterSortBy> sortByPasswordDesc({
+    bool caseSensitive = true,
+  }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'url', Sort.desc);
+      return query.addSortBy(3, sort: Sort.desc, caseSensitive: caseSensitive);
     });
   }
 
-  QueryBuilder<Device, Device, QAfterSortBy> sortByUser() {
+  QueryBuilder<Device, Device, QAfterSortBy> sortByRemark({
+    bool caseSensitive = true,
+  }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'user', Sort.asc);
+      return query.addSortBy(4, caseSensitive: caseSensitive);
     });
   }
 
-  QueryBuilder<Device, Device, QAfterSortBy> sortByUserDesc() {
+  QueryBuilder<Device, Device, QAfterSortBy> sortByRemarkDesc({
+    bool caseSensitive = true,
+  }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'user', Sort.desc);
+      return query.addSortBy(4, sort: Sort.desc, caseSensitive: caseSensitive);
     });
   }
 }
 
 extension DeviceQuerySortThenBy on QueryBuilder<Device, Device, QSortThenBy> {
-  QueryBuilder<Device, Device, QAfterSortBy> thenByHashCode() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'hashCode', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Device, Device, QAfterSortBy> thenByHashCodeDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'hashCode', Sort.desc);
-    });
-  }
-
   QueryBuilder<Device, Device, QAfterSortBy> thenById() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'id', Sort.asc);
+      return query.addSortBy(0);
     });
   }
 
   QueryBuilder<Device, Device, QAfterSortBy> thenByIdDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'id', Sort.desc);
+      return query.addSortBy(0, sort: Sort.desc);
     });
   }
 
-  QueryBuilder<Device, Device, QAfterSortBy> thenByPassword() {
+  QueryBuilder<Device, Device, QAfterSortBy> thenByUrl({
+    bool caseSensitive = true,
+  }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'password', Sort.asc);
+      return query.addSortBy(1, caseSensitive: caseSensitive);
     });
   }
 
-  QueryBuilder<Device, Device, QAfterSortBy> thenByPasswordDesc() {
+  QueryBuilder<Device, Device, QAfterSortBy> thenByUrlDesc({
+    bool caseSensitive = true,
+  }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'password', Sort.desc);
+      return query.addSortBy(1, sort: Sort.desc, caseSensitive: caseSensitive);
     });
   }
 
-  QueryBuilder<Device, Device, QAfterSortBy> thenByRemark() {
+  QueryBuilder<Device, Device, QAfterSortBy> thenByUser({
+    bool caseSensitive = true,
+  }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'remark', Sort.asc);
+      return query.addSortBy(2, caseSensitive: caseSensitive);
     });
   }
 
-  QueryBuilder<Device, Device, QAfterSortBy> thenByRemarkDesc() {
+  QueryBuilder<Device, Device, QAfterSortBy> thenByUserDesc({
+    bool caseSensitive = true,
+  }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'remark', Sort.desc);
+      return query.addSortBy(2, sort: Sort.desc, caseSensitive: caseSensitive);
     });
   }
 
-  QueryBuilder<Device, Device, QAfterSortBy> thenByUrl() {
+  QueryBuilder<Device, Device, QAfterSortBy> thenByPassword({
+    bool caseSensitive = true,
+  }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'url', Sort.asc);
+      return query.addSortBy(3, caseSensitive: caseSensitive);
     });
   }
 
-  QueryBuilder<Device, Device, QAfterSortBy> thenByUrlDesc() {
+  QueryBuilder<Device, Device, QAfterSortBy> thenByPasswordDesc({
+    bool caseSensitive = true,
+  }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'url', Sort.desc);
+      return query.addSortBy(3, sort: Sort.desc, caseSensitive: caseSensitive);
     });
   }
 
-  QueryBuilder<Device, Device, QAfterSortBy> thenByUser() {
+  QueryBuilder<Device, Device, QAfterSortBy> thenByRemark({
+    bool caseSensitive = true,
+  }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'user', Sort.asc);
+      return query.addSortBy(4, caseSensitive: caseSensitive);
     });
   }
 
-  QueryBuilder<Device, Device, QAfterSortBy> thenByUserDesc() {
+  QueryBuilder<Device, Device, QAfterSortBy> thenByRemarkDesc({
+    bool caseSensitive = true,
+  }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'user', Sort.desc);
+      return query.addSortBy(4, sort: Sort.desc, caseSensitive: caseSensitive);
     });
   }
 }
 
 extension DeviceQueryWhereDistinct on QueryBuilder<Device, Device, QDistinct> {
-  QueryBuilder<Device, Device, QDistinct> distinctByHashCode() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'hashCode');
-    });
-  }
-
-  QueryBuilder<Device, Device, QDistinct> distinctByPassword({
+  QueryBuilder<Device, Device, QAfterDistinct> distinctByUrl({
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'password', caseSensitive: caseSensitive);
+      return query.addDistinctBy(1, caseSensitive: caseSensitive);
     });
   }
 
-  QueryBuilder<Device, Device, QDistinct> distinctByRemark({
+  QueryBuilder<Device, Device, QAfterDistinct> distinctByUser({
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'remark', caseSensitive: caseSensitive);
+      return query.addDistinctBy(2, caseSensitive: caseSensitive);
     });
   }
 
-  QueryBuilder<Device, Device, QDistinct> distinctByUrl({
+  QueryBuilder<Device, Device, QAfterDistinct> distinctByPassword({
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'url', caseSensitive: caseSensitive);
+      return query.addDistinctBy(3, caseSensitive: caseSensitive);
     });
   }
 
-  QueryBuilder<Device, Device, QDistinct> distinctByUser({
+  QueryBuilder<Device, Device, QAfterDistinct> distinctByRemark({
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'user', caseSensitive: caseSensitive);
+      return query.addDistinctBy(4, caseSensitive: caseSensitive);
     });
   }
 }
 
-extension DeviceQueryProperty on QueryBuilder<Device, Device, QQueryProperty> {
-  QueryBuilder<Device, int, QQueryOperations> idProperty() {
+extension DeviceQueryProperty1 on QueryBuilder<Device, Device, QProperty> {
+  QueryBuilder<Device, int, QAfterProperty> idProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'id');
+      return query.addProperty(0);
     });
   }
 
-  QueryBuilder<Device, int, QQueryOperations> hashCodeProperty() {
+  QueryBuilder<Device, String?, QAfterProperty> urlProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'hashCode');
+      return query.addProperty(1);
     });
   }
 
-  QueryBuilder<Device, String?, QQueryOperations> passwordProperty() {
+  QueryBuilder<Device, String?, QAfterProperty> userProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'password');
+      return query.addProperty(2);
     });
   }
 
-  QueryBuilder<Device, String?, QQueryOperations> remarkProperty() {
+  QueryBuilder<Device, String?, QAfterProperty> passwordProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'remark');
+      return query.addProperty(3);
     });
   }
 
-  QueryBuilder<Device, String?, QQueryOperations> urlProperty() {
+  QueryBuilder<Device, String?, QAfterProperty> remarkProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'url');
+      return query.addProperty(4);
+    });
+  }
+}
+
+extension DeviceQueryProperty2<R> on QueryBuilder<Device, R, QAfterProperty> {
+  QueryBuilder<Device, (R, int), QAfterProperty> idProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addProperty(0);
     });
   }
 
-  QueryBuilder<Device, String?, QQueryOperations> userProperty() {
+  QueryBuilder<Device, (R, String?), QAfterProperty> urlProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'user');
+      return query.addProperty(1);
+    });
+  }
+
+  QueryBuilder<Device, (R, String?), QAfterProperty> userProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addProperty(2);
+    });
+  }
+
+  QueryBuilder<Device, (R, String?), QAfterProperty> passwordProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addProperty(3);
+    });
+  }
+
+  QueryBuilder<Device, (R, String?), QAfterProperty> remarkProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addProperty(4);
+    });
+  }
+}
+
+extension DeviceQueryProperty3<R1, R2>
+    on QueryBuilder<Device, (R1, R2), QAfterProperty> {
+  QueryBuilder<Device, (R1, R2, int), QOperations> idProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addProperty(0);
+    });
+  }
+
+  QueryBuilder<Device, (R1, R2, String?), QOperations> urlProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addProperty(1);
+    });
+  }
+
+  QueryBuilder<Device, (R1, R2, String?), QOperations> userProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addProperty(2);
+    });
+  }
+
+  QueryBuilder<Device, (R1, R2, String?), QOperations> passwordProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addProperty(3);
+    });
+  }
+
+  QueryBuilder<Device, (R1, R2, String?), QOperations> remarkProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addProperty(4);
     });
   }
 }
