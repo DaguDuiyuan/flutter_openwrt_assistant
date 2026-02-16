@@ -66,7 +66,10 @@ List<dynamic> kickWirelessPostData(String session, WirelessDeviceResp client) {
   ];
 }
 
-List<CallItem<dynamic>> getWirelessListPostData(String session, List interfaceMap) {
+List<CallItem<dynamic>> getWirelessListPostData(
+  String session,
+  List interfaceMap,
+) {
   var postData = <CallItem>[];
   for (var i = 0; i < interfaceMap.length; i++) {
     postData.add(
@@ -97,6 +100,19 @@ List<dynamic> getNetworkDevicePostData(String session) {
   return [session, "luci-rpc", "getNetworkDevices", {}];
 }
 
+List<dynamic> getEtherWakeFileStatePostData(String session) {
+  return [
+    session,
+    "file",
+    "stat",
+    {"path": "/usr/bin/etherwake"},
+  ];
+}
+
+List<dynamic> getHostHintsPostData(String session) {
+  return [session, "luci-rpc", "getHostHints", {}];
+}
+
 List<CallItem<dynamic>> getInterfacePostData(String session) {
   var postData = <CallItem>[
     CallItem(
@@ -113,7 +129,10 @@ List<CallItem<dynamic>> getInterfacePostData(String session) {
   return postData;
 }
 
-List<CallItem<dynamic>> getNetworkDataPostData(String session, List<Map<String, dynamic>> networkList) {
+List<CallItem<dynamic>> getNetworkDataPostData(
+  String session,
+  List<Map<String, dynamic>> networkList,
+) {
   var postData = <CallItem>[];
   for (var i = 0; i < networkList.length; i++) {
     postData.add(
@@ -132,6 +151,23 @@ List<CallItem<dynamic>> getNetworkDataPostData(String session, List<Map<String, 
   return postData;
 }
 
-List<dynamic> rebootPostData(String session){
+List<dynamic> rebootPostData(String session) {
   return [session, "system", "reboot", {}];
+}
+
+List<dynamic> wolExecPostData(
+  String session,
+  String mac,
+  String interface,
+  bool broadcast,
+) {
+  return [
+    session,
+    "file",
+    "exec",
+    {
+      "command": "/usr/bin/etherwake",
+      "params": ["-D", "-i", interface, if (broadcast) "-b", mac],
+    },
+  ];
 }

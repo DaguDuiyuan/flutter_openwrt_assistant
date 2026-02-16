@@ -3,6 +3,8 @@ import 'package:flutter_openwrt_assistant/core/network/api.dart';
 import 'package:flutter_openwrt_assistant/core/network/http_client.dart';
 import 'package:flutter_openwrt_assistant/database/table/device_table.dart';
 import 'package:flutter_openwrt_assistant/page/device/repositories/device_status_resp.dart';
+import 'package:flutter_openwrt_assistant/page/device/repositories/etherwake_result_resp.dart';
+import 'package:flutter_openwrt_assistant/page/device/repositories/host_hints_resp.dart';
 import 'package:flutter_openwrt_assistant/page/device/repositories/interface_resp.dart';
 import 'package:flutter_openwrt_assistant/page/device/repositories/network_chart_resp.dart';
 import 'package:flutter_openwrt_assistant/page/device/repositories/wireless_device_resp.dart';
@@ -162,6 +164,43 @@ class SessionNotifier extends StateNotifier<SessionState> {
       return list;
     }
     return [];
+  }
+
+  Future<bool> getEtherWakeFileState() async {
+    if (!state.isConnected || state.token == null) return false;
+    final res = await client.call(
+      "call",
+      getEtherWakeFileStatePostData(state.token!),
+    );
+    if (res.success) {
+      return res.result.first == 0;
+    } else {
+      return false;
+    }
+  }
+
+  Future<List<HostHintsResp>> getHostHints() async {
+    if (!state.isConnected || state.token == null) return [];
+    final res = await client.call("call", getHostHintsPostData(state.token!));
+    if (res.success && res.result.first == 0) {
+      var map = res.result.last as Map;
+      return map.keys.map((e) => HostHintsResp.fromJson(e, map[e])).toList();
+    }
+    return [];
+  }
+
+  Future<EtherwakeResultResp?> wolExec(String mac, String interface, bool sendToBroadcast) async {
+    if (!state.isConnected || state.token == null) return null;
+    final res = await client.call(
+      "call",
+      wolExecPostData(state.token!, mac, interface, sendToBroadcast),
+    );
+
+    if (res.success && res.result.first == 0) {
+      return EtherwakeResultResp.fromJson(res.result.last);
+    } else {
+      return null;
+    }
   }
 
   Future<List<List<List<NetworkChartResp>>>> getNetworkData(

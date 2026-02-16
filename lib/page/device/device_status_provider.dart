@@ -16,16 +16,12 @@ class DeviceStateNotifier extends StateNotifier<DeviceStatusResp?> {
 
   void _init() async {
     getStatus();
-    getNetworkList();
   }
 
   Future<void> getStatus() async {
     state = await ref.read(sessionProvider(device).notifier).getDeviceStatus();
   }
 
-  Future<void> getNetworkList() async {
-    ref.read(sessionProvider(device).notifier).getNetworkList();
-  }
 }
 
 class NetChartStateNotifier
