@@ -18,24 +18,24 @@ class DeviceProvider extends StateNotifier<List<Device>> {
   }
 
   Future<void> addDevice(Device device) async {
-    await isarDB.writeAsync((isar) async {
+    await isarDB.writeAsync((isar) {
       isar.devices.put(device);
     });
-    getDevices();
+    state = await isarDB.devices.where().findAllAsync();
   }
 
   Future<void> deleteDevice(Device device) async {
-    await isarDB.writeAsync((isar) async {
+    await isarDB.writeAsync((isar) {
       isar.devices.delete(device.id);
     });
-    getDevices();
+    state = await isarDB.devices.where().findAllAsync();
   }
 
   Future<void> updateDevice(Device device) async {
-    await isarDB.writeAsync((isar) async {
+    await isarDB.writeAsync((isar) {
       isar.devices.put(device);
     });
-    getDevices();
+    state = await isarDB.devices.where().findAllAsync();
   }
 }
 

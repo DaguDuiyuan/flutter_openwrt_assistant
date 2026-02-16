@@ -55,7 +55,7 @@ class DeviceAddPage extends HookConsumerWidget {
             border: const OutlineInputBorder(),
           ),
         ),
-        separatorBuilder: (_, __) => const SizedBox(height: 24),
+        separatorBuilder: (context, index) => const SizedBox(height: 24),
         itemCount: titles.length,
       ),
       floatingActionButton: FloatingActionButton(
