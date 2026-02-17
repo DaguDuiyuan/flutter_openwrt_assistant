@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_openwrt_assistant/database/table/device_table.dart';
 import 'package:flutter_openwrt_assistant/page/device/repositories/etherwake_result_resp.dart';
+import 'package:flutter_openwrt_assistant/page/device/repositories/host_hints_resp.dart';
 import 'package:flutter_openwrt_assistant/page/wol/wol_provider.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -18,41 +19,31 @@ class WolPage extends HookConsumerWidget {
           ? const Center(child: CircularProgressIndicator())
           : provider.isSupport
           ? SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(vertical: 16.0),
+              padding: const EdgeInsets.all(16.0),
               child: Column(
                 children: [
-                  DropdownMenu(
-                    width: MediaQuery.of(context).size.width - 32,
-                    label: const Text('网络接口'),
-                    onSelected: (value) {
-                      ref.read(wolProvider(device).notifier).setInterface(value);
+                  _buildInputField(
+                    labelText: '网络接口',
+                    icon: Icons.network_wifi,
+                    initialValue: provider.interface,
+                    onChanged: (value) {
+                      ref
+                          .read(wolProvider(device).notifier)
+                          .setInterface(value);
                     },
-                    menuHeight: MediaQuery.of(context).size.height * 0.5,
-                    dropdownMenuEntries: provider.interfaces
-                        .map(
-                          (e) => DropdownMenuEntry(
-                            value: e['name'],
-                            label: e['name'],
-                          ),
-                        )
+                    options: provider.interfaces
+                        .map((e) => e['name'] as String)
                         .toList(),
                   ),
-                  const SizedBox(height: 16.0),
-                  DropdownMenu(
-                    width: MediaQuery.of(context).size.width - 32,
-                    label: const Text('目标设备'),
-                    onSelected: (value) {
+                  const SizedBox(height: 24.0),
+                  _buildHostInputField(
+                    labelText: '目标设备',
+                    icon: Icons.computer,
+                    initialValue: provider.mac,
+                    onChanged: (value) {
                       ref.read(wolProvider(device).notifier).setMac(value);
                     },
-                    menuHeight: MediaQuery.of(context).size.height * 0.5,
-                    dropdownMenuEntries: provider.hostHints
-                        .map(
-                          (e) => DropdownMenuEntry(
-                            value: e.mac,
-                            label: e.hostname ?? e.ipv4.firstOrNull ?? e.mac,
-                          ),
-                        )
-                        .toList(),
+                    hostHints: provider.hostHints,
                   ),
                   const SizedBox(height: 16.0),
                   Row(
@@ -77,6 +68,7 @@ class WolPage extends HookConsumerWidget {
                     .read(wolProvider(device).notifier)
                     .sendWol();
                 if (result != null && context.mounted) {
+                  ref.read(wolProvider(device).notifier).remember();
                   showResultDialog(context, result);
                 }
               },
@@ -84,6 +76,112 @@ class WolPage extends HookConsumerWidget {
             )
           : null,
     );
+  }
+
+  Widget _buildInputField({
+    required String labelText,
+    required IconData icon,
+    required String? initialValue,
+    required Function(String) onChanged,
+    required List<String> options,
+  }) {
+    return Autocomplete<String>(
+      optionsBuilder: (textEditingValue) {
+        if (textEditingValue.text.isEmpty) {
+          return options;
+        }
+        return options.where((option) {
+          return option.toLowerCase().contains(
+            textEditingValue.text.toLowerCase(),
+          );
+        });
+      },
+      onSelected: (value) {
+        onChanged(value);
+      },
+      fieldViewBuilder:
+          (context, textEditingController, focusNode, onFieldSubmitted) {
+            if (initialValue != null && textEditingController.text.isEmpty) {
+              textEditingController.text = initialValue;
+            }
+
+            return TextField(
+              controller: textEditingController,
+              focusNode: focusNode,
+              decoration: InputDecoration(
+                labelText: labelText,
+                border: const OutlineInputBorder(),
+                prefixIcon: Icon(icon),
+              ),
+              onChanged: onChanged,
+              onSubmitted: (value) => onFieldSubmitted(),
+            );
+          },
+    );
+  }
+
+  // 构建主机选择专用输入框
+  Widget _buildHostInputField({
+    required String labelText,
+    required IconData icon,
+    required String? initialValue,
+    required Function(String) onChanged,
+    required List<HostHintsResp> hostHints,
+  }) {
+    return Autocomplete<HostHintsResp>(
+      optionsBuilder: (textEditingValue) {
+        if (textEditingValue.text.isEmpty) {
+          return hostHints;
+        }
+        return hostHints.where((host) {
+          final displayText = _getHostDisplayText(host);
+          return displayText.toLowerCase().contains(
+            textEditingValue.text.toLowerCase(),
+          );
+        });
+      },
+      displayStringForOption: (host) => _getHostDisplayText(host),
+      onSelected: (host) {
+        onChanged(host.mac);
+      },
+      fieldViewBuilder:
+          (context, textEditingController, focusNode, onFieldSubmitted) {
+            if (initialValue != null && textEditingController.text.isEmpty) {
+              final initialHost = hostHints.firstWhere(
+                (host) => host.mac == initialValue,
+                orElse: () => HostHintsResp(
+                  mac: initialValue,
+                  hostname: null,
+                  ipv4: [],
+                  ipv6: [],
+                ),
+              );
+              textEditingController.text = _getHostDisplayText(initialHost);
+            }
+
+            return TextField(
+              controller: textEditingController,
+              focusNode: focusNode,
+              decoration: InputDecoration(
+                labelText: labelText,
+                border: const OutlineInputBorder(),
+                prefixIcon: Icon(icon),
+              ),
+              onChanged: (value) {
+                // 如果用户直接输入MAC地址，直接使用
+                if (value.contains(':') || value.length == 17) {
+                  onChanged(value);
+                }
+              },
+              onSubmitted: (value) => onFieldSubmitted(),
+            );
+          },
+    );
+  }
+
+  String _getHostDisplayText(HostHintsResp host) {
+    final name = host.hostname ?? host.ipv4.firstOrNull ?? host.mac;
+    return '$name (${host.mac})';
   }
 
   void showResultDialog(BuildContext context, EtherwakeResultResp message) {

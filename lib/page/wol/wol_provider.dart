@@ -5,6 +5,8 @@ import 'package:flutter_openwrt_assistant/page/device/session_provider.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:hooks_riverpod/legacy.dart';
 
+import '../../main.dart';
+
 class WolProvider extends StateNotifier<WolState> {
   final Ref ref;
   final Device device;
@@ -15,14 +17,18 @@ class WolProvider extends StateNotifier<WolState> {
 
   void init() async {
     var sProvider = ref.read(sessionProvider(device).notifier);
+
+    final lastMac = prefs.getString('wol_mac_${device.id}');
+    final lastInterface = prefs.getString('wol_interface_${device.id}');
+    
     state = WolState(
       isSupport: await sProvider.getEtherWakeFileState(),
       hostHints: await sProvider.getHostHints(),
       interfaces: await sProvider.getNetworkList(),
       loading: false,
       sendToBroadcast: false,
-      mac: null,
-      interface: null,
+      mac: lastMac,
+      interface: lastInterface,
     );
   }
 
@@ -43,6 +49,14 @@ class WolProvider extends StateNotifier<WolState> {
     return result;
   }
 
+  // 记住这次选中的内容，下次自动填充
+  void remember() {
+    if (state.mac?.isEmpty ?? true) return;
+    if (state.interface?.isEmpty ?? true) return;
+    prefs.setString('wol_mac_${device.id}', state.mac!);
+    prefs.setString('wol_interface_${device.id}', state.interface!);
+  }
+
   void setSendToBroadcast(bool value) {
     state = state.copyWith(sendToBroadcast: value);
   }
@@ -56,7 +70,7 @@ class WolProvider extends StateNotifier<WolState> {
   }
 }
 
-final wolProvider = StateNotifierProvider.family<WolProvider, WolState, Device>(
+final wolProvider = StateNotifierProvider.autoDispose.family<WolProvider, WolState, Device>(
   (ref, device) => WolProvider(ref, device),
 );
 
