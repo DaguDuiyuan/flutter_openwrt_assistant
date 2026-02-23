@@ -180,7 +180,10 @@ class WolPage extends HookConsumerWidget {
   }
 
   String _getHostDisplayText(HostHintsResp host) {
-    final name = host.hostname ?? host.ipv4.firstOrNull ?? host.mac;
+    final name = host.hostname ?? host.ipv4.firstOrNull;
+    if (name == null) {
+      return host.mac;
+    }
     return '$name (${host.mac})';
   }
 
