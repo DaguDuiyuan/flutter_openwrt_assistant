@@ -69,6 +69,12 @@ class DeviceAppsPage extends HookConsumerWidget {
             leading: const Icon(Icons.apps),
             onTap: () => context.push('/wol', extra: device),
           ),
+          ListTile(
+            title: const Text('端口转发'),
+            subtitle: const Text('3cat 简单 TCP/UDP 端口转发'),
+            leading: const Icon(Icons.swap_horiz),
+            onTap: () => context.push('/3cat', extra: device),
+          ),
         ],
       ),
     );
