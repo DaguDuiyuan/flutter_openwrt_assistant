@@ -130,6 +130,7 @@ class ThreeCatState {
       loading: loading ?? this.loading,
       error: error ?? this.error,
       rules: rules ?? this.rules,
+      installed: installed ?? this.installed,
     );
   }
 }

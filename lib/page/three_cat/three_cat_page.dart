@@ -28,16 +28,49 @@ class ThreeCatPage extends HookConsumerWidget {
         ],
       ),
       body: _buildBody(context, ref, state),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => _openEditPage(context, ref),
-        child: const Icon(Icons.add),
-      ),
+      floatingActionButton: state.installed
+          ? FloatingActionButton(
+              onPressed: () => _openEditPage(context, ref),
+              child: const Icon(Icons.add),
+            )
+          : null,
     );
   }
 
   Widget _buildBody(BuildContext context, WidgetRef ref, ThreeCatState state) {
     if (state.loading) {
       return const Center(child: CircularProgressIndicator());
+    }
+    if (!state.installed) {
+      final outline = Theme.of(context).colorScheme.outline;
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.extension_off, size: 56, color: outline),
+              const SizedBox(height: 16),
+              Text(
+                '未检测到 3cat 插件',
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+              const SizedBox(height: 8),
+              Text(
+                '请在路由器 LuCI 的软件包中安装 luci-app-3cat,\n安装完成后再试',
+                textAlign: TextAlign.center,
+                style: TextStyle(color: outline),
+              ),
+              const SizedBox(height: 16),
+              FilledButton.tonal(
+                onPressed: () =>
+                    ref.read(threeCatProvider(device).notifier).init(),
+                child: const Text('重试'),
+              ),
+            ],
+          ),
+        ),
+      );
     }
     if (state.error != null) {
       return Center(
@@ -87,7 +120,7 @@ class ThreeCatPage extends HookConsumerWidget {
           rule.summary,
           style: const TextStyle(fontWeight: FontWeight.bold),
         ),
-        subtitle: Text(rule.detail, style: TextStyle(fontSize: 12),),
+        subtitle: Text(rule.detail, style: TextStyle(fontSize: 12)),
         leading: Container(
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
