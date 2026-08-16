@@ -18,6 +18,7 @@ class ThreeCatEditPage extends ConsumerStatefulWidget {
 
 class _ThreeCatEditPageState extends ConsumerState<ThreeCatEditPage> {
   final _formKey = GlobalKey<FormState>();
+  late final TextEditingController _name;
   late final TextEditingController _listenAddr;
   late final TextEditingController _listenPort;
   late final TextEditingController _destAddr;
@@ -36,6 +37,7 @@ class _ThreeCatEditPageState extends ConsumerState<ThreeCatEditPage> {
   void initState() {
     super.initState();
     final rule = widget.rule;
+    _name = TextEditingController(text: rule?.name ?? '');
     _listenAddr = TextEditingController(text: rule?.listenAddr ?? '::');
     _listenPort = TextEditingController(text: rule?.listenPort ?? '');
     _destAddr = TextEditingController(text: rule?.destAddr ?? '');
@@ -49,6 +51,7 @@ class _ThreeCatEditPageState extends ConsumerState<ThreeCatEditPage> {
 
   @override
   void dispose() {
+    _name.dispose();
     _listenAddr.dispose();
     _listenPort.dispose();
     _destAddr.dispose();
@@ -61,6 +64,7 @@ class _ThreeCatEditPageState extends ConsumerState<ThreeCatEditPage> {
     setState(() => _saving = true);
     final rule = ThreeCatRule(
       section: widget.rule?.section ?? '',
+      anonymous: widget.rule?.anonymous ?? true,
       enabled: _enabled,
       listenAddr: _listenAddr.text.trim(),
       listenPort: _listenPort.text.trim(),
@@ -73,7 +77,7 @@ class _ThreeCatEditPageState extends ConsumerState<ThreeCatEditPage> {
     );
     final error = await ref
         .read(threeCatProvider(widget.device).notifier)
-        .saveRule(rule);
+        .saveRule(rule, name: _name.text);
     if (!mounted) return;
     setState(() => _saving = false);
     if (error == null) {
@@ -92,6 +96,15 @@ class _ThreeCatEditPageState extends ConsumerState<ThreeCatEditPage> {
         child: ListView(
           padding: const EdgeInsets.all(16),
           children: [
+            TextFormField(
+              controller: _name,
+              decoration: const InputDecoration(
+                labelText: '名称',
+                hintText: '可选,如 web、mail(留空自动生成)',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(height: 16),
             Row(
               children: [
                 Expanded(

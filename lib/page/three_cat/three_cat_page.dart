@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_openwrt_assistant/core/utils/snack_bar.dart';
 import 'package:flutter_openwrt_assistant/database/table/device_table.dart';
 import 'package:flutter_openwrt_assistant/page/three_cat/three_cat_provider.dart';
@@ -16,6 +17,25 @@ class ThreeCatPage extends HookConsumerWidget {
     final provider = ref.watch(threeCatProvider(device));
     final state = provider;
 
+    // 向下滚动(查看更多规则)时隐藏 FAB,向上滚动时恢复
+    final scrollController = useScrollController();
+    final fabHidden = useState(false);
+    final lastOffset = useRef(0.0);
+    useEffect(() {
+      void listener() {
+        final offset = scrollController.offset;
+        if (offset > lastOffset.value + 1 && offset > 80) {
+          fabHidden.value = true;
+        } else if (offset < lastOffset.value - 1) {
+          fabHidden.value = false;
+        }
+        lastOffset.value = offset;
+      }
+
+      scrollController.addListener(listener);
+      return () => scrollController.removeListener(listener);
+    }, [scrollController, fabHidden, lastOffset]);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('端口转发'),
@@ -27,17 +47,27 @@ class ThreeCatPage extends HookConsumerWidget {
           ),
         ],
       ),
-      body: _buildBody(context, ref, state),
+      body: _buildBody(context, ref, state, scrollController),
       floatingActionButton: state.installed
-          ? FloatingActionButton(
-              onPressed: () => _openEditPage(context, ref),
-              child: const Icon(Icons.add),
+          ? AnimatedSlide(
+              offset: fabHidden.value ? const Offset(0, 1.5) : Offset.zero,
+              duration: const Duration(milliseconds: 200),
+              curve: Curves.easeInOut,
+              child: FloatingActionButton(
+                onPressed: () => _openEditPage(context, ref),
+                child: const Icon(Icons.add),
+              ),
             )
           : null,
     );
   }
 
-  Widget _buildBody(BuildContext context, WidgetRef ref, ThreeCatState state) {
+  Widget _buildBody(
+    BuildContext context,
+    WidgetRef ref,
+    ThreeCatState state,
+    ScrollController scrollController,
+  ) {
     if (state.loading) {
       return const Center(child: CircularProgressIndicator());
     }
@@ -94,7 +124,9 @@ class ThreeCatPage extends HookConsumerWidget {
     return RefreshIndicator(
       onRefresh: () => ref.read(threeCatProvider(device).notifier).load(),
       child: ListView.builder(
-        padding: const EdgeInsets.symmetric(vertical: 8),
+        controller: scrollController,
+        // 底部留白:即使 FAB 显示也不遮挡最后一条规则
+        padding: const EdgeInsets.only(top: 8, bottom: 96),
         itemCount: state.rules.length,
         itemBuilder: (context, index) {
           final rule = state.rules[index];
@@ -117,10 +149,10 @@ class ThreeCatPage extends HookConsumerWidget {
       child: ListTile(
         contentPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
         title: Text(
-          rule.summary,
+          rule.title,
           style: const TextStyle(fontWeight: FontWeight.bold),
         ),
-        subtitle: Text(rule.detail, style: TextStyle(fontSize: 12)),
+        subtitle: Text(rule.subtitle, style: TextStyle(fontSize: 12)),
         leading: Container(
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(

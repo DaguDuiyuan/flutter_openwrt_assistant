@@ -57,13 +57,19 @@ class ThreeCatRepository {
         .toList();
   }
 
-  /// 新增一条规则,返回新的 section 名(如 cfg0a1b2c)。
-  Future<String?> addRule(ThreeCatRule rule) async {
+  /// 新增一条规则,返回新的 section 名(如 cfg0a1b2c 或自定义名称)。
+  /// [name] 非空时创建命名 section,否则为匿名 section。
+  Future<String?> addRule(ThreeCatRule rule, {String? name}) async {
     final res = await _client.call<List<dynamic>>("call", [
       _session,
       "uci",
       "add",
-      {"config": "3cat", "type": "instance", "values": rule.toValues()},
+      {
+        "config": "3cat",
+        "type": "instance",
+        if (name != null && name.isNotEmpty) "name": name,
+        "values": rule.toValues(),
+      },
     ]);
     if (!res.success) throw _fail('uci/add', res);
     if (res.result == null || res.result!.isEmpty) {
@@ -73,6 +79,19 @@ class ThreeCatRepository {
     if (section == null) throw _fail('uci/add(无 section)', res);
     await _commit();
     return section.toString();
+  }
+
+  /// 重命名规则(UCI section 名)。改名后返回新 section 名。
+  Future<String> renameRule(String oldSection, String newName) async {
+    final res = await _client.call<List<dynamic>>("call", [
+      _session,
+      "uci",
+      "rename",
+      {"config": "3cat", "section": oldSection, "name": newName},
+    ]);
+    if (!res.success) throw _fail('uci/rename', res);
+    await _commit();
+    return newName;
   }
 
   /// 修改已有规则(section 必须存在)。

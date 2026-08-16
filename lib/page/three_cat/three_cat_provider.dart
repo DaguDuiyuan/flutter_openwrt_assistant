@@ -67,15 +67,23 @@ class ThreeCatProvider extends StateNotifier<ThreeCatState> {
   }
 
   /// 新增(rule.section 为空)或保存修改。返回 null 表示成功,否则为错误信息。
-  Future<String?> saveRule(ThreeCatRule rule) async {
+  /// [name] 为规则名称(UCI section 名),留空表示匿名规则。
+  Future<String?> saveRule(ThreeCatRule rule, {String? name}) async {
     final repo = _repository;
     if (repo == null) return '未连接到路由器';
     try {
+      final newName = name?.trim() ?? '';
       if (rule.section.isEmpty) {
-        final section = await repo.addRule(rule);
+        // 新增
+        final section = await repo.addRule(rule, name: newName);
         if (section == null) return '新增规则失败';
       } else {
-        await repo.updateRule(rule.section, rule);
+        // 编辑:名称有变化时先改名(匿名→命名、命名→改名)
+        var current = rule.section;
+        if (newName.isNotEmpty && newName != rule.section) {
+          current = await repo.renameRule(rule.section, newName);
+        }
+        await repo.updateRule(current, rule);
       }
       await repo.restart();
       await load();
