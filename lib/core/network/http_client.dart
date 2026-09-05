@@ -93,9 +93,9 @@ class JsonRpcClient {
         responseHeader: true,
         responseBody: true,
         logPrint: (obj) {
-          if (kDebugMode) {
-            print(obj);
-          }
+          // if (kDebugMode) {
+          //   print(obj);
+          // }
         },
       ),
     );
@@ -106,6 +106,9 @@ class JsonRpcClient {
   Future<JsonRpcResponse<T>> call<T>(String method, [dynamic params]) async {
     final id = _getNextId();
     final request = _createRequest(method, params, id);
+    if (kDebugMode) {
+      debugPrint('[JsonRpc] request: $method $_url');
+    }
 
     try {
       final response = await _dio.post(
@@ -122,8 +125,29 @@ class JsonRpcClient {
         );
       }
 
+      if (kDebugMode) {
+        debugPrint(
+          '[JsonRpc] response: ${response.statusCode} '
+          '${response.requestOptions.uri}',
+        );
+        final location = response.headers.value('location');
+        if (location != null) {
+          debugPrint('[JsonRpc] redirect location: $location');
+        }
+      }
+
       return _parseResponse<T>(response.data, id);
     } on DioException catch (e) {
+      if (kDebugMode) {
+        debugPrint('[JsonRpc] error request URL: $_url');
+        debugPrint('[JsonRpc] error final URI: ${e.requestOptions.uri}');
+        debugPrint('[JsonRpc] error type: ${e.type}');
+        debugPrint('[JsonRpc] error response: ${e.response?.statusCode}');
+        final location = e.response?.headers.value('location');
+        if (location != null) {
+          debugPrint('[JsonRpc] error redirect location: $location');
+        }
+      }
       throw JsonRpcException('Network or HTTP request failed', cause: e);
     } catch (e) {
       throw JsonRpcException('Unexpected error during request', cause: e);
@@ -145,26 +169,36 @@ class JsonRpcClient {
       };
     }).toList();
 
-    try {
-      final response = await _dio.post(
-        _url,
-        data: requests, // 直接发送数组
-      );
-
-      if (response.statusCode != 200 && response.statusCode != 201) {
-        throw JsonRpcException(
-          'HTTP Error in batch: ${response.statusCode}',
-          cause: response.statusMessage,
+    DioException? lastDioError;
+    for (var attempt = 0; attempt < 2; attempt++) {
+      try {
+        if (attempt > 0) {
+          await Future<void>.delayed(const Duration(milliseconds: 600));
+        }
+        final response = await _dio.post(
+          _url,
+          data: requests, // 直接发送数组
         );
-      }
 
-      // 解析批量响应
-      return _parseBatchResponse<T>(response.data, calls.length);
-    } on DioException catch (e) {
-      throw JsonRpcException('Network error during batch call', cause: e);
-    } catch (e) {
-      throw JsonRpcException('Unexpected error during batch call', cause: e);
+        if (response.statusCode != 200 && response.statusCode != 201) {
+          throw JsonRpcException(
+            'HTTP Error in batch: ${response.statusCode}',
+            cause: response.statusMessage,
+          );
+        }
+
+        // 解析批量响应
+        return _parseBatchResponse<T>(response.data, calls.length);
+      } on DioException catch (e) {
+        lastDioError = e;
+      } catch (e) {
+        throw JsonRpcException('Unexpected error during batch call', cause: e);
+      }
     }
+    throw JsonRpcException(
+      'Network error during batch call',
+      cause: lastDioError,
+    );
   }
 
   Future<void> notify(String method, [dynamic params]) async {

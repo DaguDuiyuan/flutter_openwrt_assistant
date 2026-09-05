@@ -135,29 +135,6 @@ class ThreeCatRepository {
     if (!res.success) throw _fail('uci/apply', res);
   }
 
-  /// 重启 3cat 服务使配置生效(尽力而为)。
-  ///
-  /// rpcd 的 file/exec 有命令白名单,LuCI 会话通常没有 exec 权限
-  /// (会返回 -32002 Access denied)。此时静默降级:3cat 的 init.d
-  /// 注册了 `procd_add_reload_trigger "3cat"`,commit 后 procd 会
-  /// 自动重新加载运行中的实例,无需手动重启。
-  Future<void> restart() async {
-    try {
-      await _client.call<List<dynamic>>("call", [
-        _session,
-        "file",
-        "exec",
-        {
-          "command": "/etc/init.d/3cat",
-          "params": ["restart"],
-        },
-      ]);
-      // exec 被拒(-32002)属预期:依赖 procd reload trigger,静默降级。
-    } catch (_) {
-      // 同上,静默降级。
-    }
-  }
-
   JsonRpcException _fail(String what, JsonRpcResponse<List<dynamic>> res) {
     return JsonRpcException('$what 失败', cause: res.toString());
   }

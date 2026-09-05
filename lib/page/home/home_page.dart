@@ -22,7 +22,10 @@ class _HomePageState extends ConsumerState<HomePage> {
       appBar: AppBar(
         title: const Text('设备列表'),
         actions: [
-          IconButton(icon: const Icon(Icons.settings), onPressed: () => context.push("/setting")),
+          IconButton(
+            icon: const Icon(Icons.settings),
+            onPressed: () => context.push("/setting"),
+          ),
         ],
       ),
       body: RefreshIndicator(
@@ -32,18 +35,20 @@ class _HomePageState extends ConsumerState<HomePage> {
           itemBuilder: (context, index) => ListTile(
             title: Text(deviceList[index].remark ?? "Op设备"),
             subtitle: Text(deviceList[index].url!),
-            onTap: () {
-              // 登录设备
-              ref.read(sessionProvider(deviceList[index]).notifier).login().then((v){
-                if(v){
-                  showSnackBar("登录成功");
-                  if(context.mounted){
-                    context.replace("/device/${deviceList[index].id}");
-                  }
-                }else{
-                  showErrorSnackBar("登录失败，请检查用户名密码是否正确");
-                }
-              });
+            onTap: () async {
+              // 设备信息可能已经被编辑,不能复用旧的 session/client。
+              final device = deviceList[index];
+              ref.invalidate(sessionProvider(device));
+              final success = await ref
+                  .read(sessionProvider(device).notifier)
+                  .login();
+              if (!context.mounted) return;
+              if (success) {
+                showSnackBar("登录成功");
+                context.replace("/device/${device.id}");
+              } else {
+                showErrorSnackBar("登录失败，请检查用户名密码是否正确");
+              }
             },
             onLongPress: () => _showDeviceEditSheet(deviceList[index]),
           ),
@@ -67,38 +72,47 @@ class _HomePageState extends ConsumerState<HomePage> {
       showDragHandle: true,
       useSafeArea: true,
       builder: (context) {
-        return SafeArea(child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ListTile(
-              leading: const Icon(Icons.edit),
-              title: Transform.translate(
-                offset: const Offset(0, -1.2),
-                child: const Text('编辑信息'),
+        return SafeArea(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                leading: const Icon(Icons.edit),
+                title: Transform.translate(
+                  offset: const Offset(0, -1.2),
+                  child: const Text('编辑信息'),
+                ),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  context.push("/device_modify/${device.id}").then((
+                    updatedDevice,
+                  ) async {
+                    if (updatedDevice != null && updatedDevice is Device) {
+                      await ref
+                          .read(deviceProvider.notifier)
+                          .updateDevice(updatedDevice);
+                      ref.invalidate(sessionProvider(updatedDevice));
+                      if (context.mounted) {
+                        showSnackBar("修改成功");
+                      }
+                    }
+                  });
+                },
               ),
-              onTap: () {
-                Navigator.of(context).pop();
-                context.push("/device_modify/${device.id}").then((device) {
-                  if (device != null && device is Device) {
-                    showSnackBar("修改成功");
-                    ref.read(deviceProvider.notifier).updateDevice(device);
-                  }
-                });
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.delete),
-              title: Transform.translate(
-                offset: const Offset(0, -1.2),
-                child: const Text('删除条目'),
+              ListTile(
+                leading: const Icon(Icons.delete),
+                title: Transform.translate(
+                  offset: const Offset(0, -1.2),
+                  child: const Text('删除条目'),
+                ),
+                onTap: () {
+                  ref.read(deviceProvider.notifier).deleteDevice(device);
+                  Navigator.of(context).pop();
+                },
               ),
-              onTap: () {
-                ref.read(deviceProvider.notifier).deleteDevice(device);
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        ),);
+            ],
+          ),
+        );
       },
     );
   }

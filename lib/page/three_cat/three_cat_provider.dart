@@ -44,12 +44,23 @@ class ThreeCatProvider extends StateNotifier<ThreeCatState> {
   Future<void> load() async {
     final repo = _repository;
     if (repo == null) return;
-    try {
-      final rules = await repo.getRules();
-      state = state.copyWith(loading: false, rules: rules, error: null);
-    } catch (e) {
-      state = state.copyWith(loading: false, error: '加载失败: $e');
+
+    Object? lastError;
+    for (var attempt = 0; attempt < 3; attempt++) {
+      try {
+        // uci/apply 返回成功后，procd 可能还在重载 3cat。给 rpcd
+        // 一点恢复时间，避免 Android 上立即复用被关闭的连接。
+        if (attempt > 0) {
+          await Future<void>.delayed(Duration(milliseconds: 500 * attempt));
+        }
+        final rules = await repo.getRules();
+        state = state.copyWith(loading: false, rules: rules, error: null);
+        return;
+      } catch (e) {
+        lastError = e;
+      }
     }
+    state = state.copyWith(loading: false, error: '加载失败: $lastError');
   }
 
   /// 切换规则开关。返回 null 表示成功,否则为错误信息。
@@ -58,7 +69,6 @@ class ThreeCatProvider extends StateNotifier<ThreeCatState> {
     if (repo == null) return '未连接到路由器';
     try {
       await repo.updateRule(rule.section, rule.copyWith(enabled: enabled));
-      await repo.restart();
       await load();
       return null;
     } catch (e) {
@@ -85,7 +95,6 @@ class ThreeCatProvider extends StateNotifier<ThreeCatState> {
         }
         await repo.updateRule(current, rule);
       }
-      await repo.restart();
       await load();
       return null;
     } catch (e) {
@@ -99,7 +108,6 @@ class ThreeCatProvider extends StateNotifier<ThreeCatState> {
     if (repo == null) return '未连接到路由器';
     try {
       await repo.deleteRule(section);
-      await repo.restart();
       await load();
       return null;
     } catch (e) {

@@ -19,10 +19,24 @@ class DeviceStatusPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     useEffect(() {
       Timer? timer;
+      var polling = false;
+
+      Future<void> poll() async {
+        if (polling) return;
+        polling = true;
+        try {
+          await Future.wait([
+            ref.read(statsProvider(device).notifier).getStatus(),
+            ref.read(chartProvider(device).notifier).getNetworkChartData(),
+          ]);
+        } finally {
+          polling = false;
+        }
+      }
+
       void startPolling() {
         timer = Timer.periodic(const Duration(seconds: 3), (tick) {
-          ref.read(statsProvider(device).notifier).getStatus();
-          ref.read(chartProvider(device).notifier).getNetworkChartData();
+          poll();
         });
       }
 
@@ -238,7 +252,10 @@ class DeviceStatusPage extends HookConsumerWidget {
     );
   }
 
-  Widget networkChartView(WidgetRef ref, List<List<NetworkChartResp>> chartData) {
+  Widget networkChartView(
+    WidgetRef ref,
+    List<List<NetworkChartResp>> chartData,
+  ) {
     if (chartData.isEmpty || chartData.length < 2) {
       return Opacity(opacity: 0);
     }

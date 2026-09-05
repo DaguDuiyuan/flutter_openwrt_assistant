@@ -19,9 +19,18 @@ class DeviceStateNotifier extends StateNotifier<DeviceStatusResp?> {
   }
 
   Future<void> getStatus() async {
-    state = await ref.read(sessionProvider(device).notifier).getDeviceStatus();
+    try {
+      state = await ref
+          .read(sessionProvider(device).notifier)
+          .getDeviceStatus();
+    } catch (e) {
+      // 状态页是后台轮询。路由器重载或网络瞬断时保留上一次数据，
+      // 不让未捕获的异步异常干扰其他页面操作。
+      if (kDebugMode) {
+        debugPrint('[DeviceStatus] polling failed: $e');
+      }
+    }
   }
-
 }
 
 class NetChartStateNotifier
@@ -66,9 +75,9 @@ class NetChartStateNotifier
   }
 
   dynamic currentInterface() {
-    try{
+    try {
       return _networkList[currentIndex]['name'];
-    }catch(_){
+    } catch (_) {
       return '';
     }
   }
